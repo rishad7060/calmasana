@@ -20,7 +20,8 @@ import { drawPoint, drawSegment } from '../../utils/helper'
 let skeletonColor = 'rgb(255,255,255)'
 let poseList = [
   'Tree', 'Chair', 'Cobra', 'Warrior', 'Dog',
-  'Shoulderstand', 'Traingle'
+  'Shoulderstand', 'Traingle', 'Mountain', 'Child',
+  'Bridge', 'Plank', 'Cat-Cow', 'Downward Dog'
 ]
 
 let interval
@@ -69,6 +70,13 @@ function Yoga() {
     Traingle: 5,
     Tree: 6,
     Warrior: 7,
+    // Temporary mapping for manual poses (until model is retrained)
+    Mountain: 6,        // Map to Tree (similar standing pose)
+    Child: 1,           // Map to Cobra (similar floor pose)
+    Bridge: 4,          // Map to Shoulderstand (similar inversion)
+    Plank: 2,           // Map to Dog (similar arm support)
+    'Cat-Cow': 2,       // Map to Dog (similar on hands and knees)
+    'Downward Dog': 2   // Map to Dog (same pose, different name)
   }
 
   function get_center_point(landmarks, left_bodypart, right_bodypart) {

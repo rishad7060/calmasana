@@ -4,3 +4,5 @@ scikit-learn
 tensorflowjs
 opencv-python
 numpy
+tqdm
+wget

@@ -64,6 +64,18 @@
   font-size: 1.2rem;
 }
 
+.welcome-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.refresh-btn:hover {
+  background: #f7fafc !important;
+  border-color: #cbd5e0 !important;
+  transform: rotate(180deg);
+}
+
 /* Stats Overview */
 .stats-overview {
   display: grid;
@@ -487,6 +499,13 @@
 
 .action-item:hover .action-text {
   color: white;
+}
+
+.action-button {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
 }
 
 /* Today's Plan Card */

@@ -10,7 +10,8 @@ export default function DropDown({ poseList, currentPose, setCurrentPose }) {
   // AI Model supported poses (with pose detection)
   const aiSupportedPoses = [
     'Tree', 'Chair', 'Cobra', 'Warrior', 'Dog',
-    'Shoulderstand', 'Traingle'
+    'Shoulderstand', 'Traingle', 'Mountain', 'Child', 
+    'Bridge', 'Plank', 'Cat-Cow', 'Downward Dog'
   ]
   
   return (

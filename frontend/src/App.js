@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom'
+import { initializeNotifications } from './services/notificationService'
 
 import Landing from './pages/Landing/Landing'
 import Auth from './pages/Auth/Auth'
@@ -11,6 +12,7 @@ import About from './pages/About/About'
 import Tutorials from './pages/Tutorials/Tutorials'
 import Onboarding from './pages/Onboarding/Onboarding'
 import Poses from './pages/Poses/Poses'
+import AllPoses from './pages/AllPoses/AllPoses'
 import Settings from './pages/Settings/Settings'
 import History from './pages/History/History'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
@@ -20,6 +22,11 @@ import { ToastProvider } from './contexts/ToastContext'
 import './App.css'
 
 export default function App() {
+  // Initialize notifications on app startup
+  useEffect(() => {
+    initializeNotifications()
+  }, [])
+
   return (
     <ThemeProvider>
       <ToastProvider>
@@ -51,6 +58,11 @@ export default function App() {
             <Route path='/poses' element={
               <ProtectedRoute>
                 <Poses />
+              </ProtectedRoute>
+            } />
+            <Route path='/all-poses' element={
+              <ProtectedRoute>
+                <AllPoses />
               </ProtectedRoute>
             } />
             <Route path='/settings' element={

@@ -94,8 +94,17 @@
     color: white;
 }
 
+.unavailable {
+    background: #e2e8f0 !important;
+    color: #999 !important;
+}
+
 .dropdown-item-container:hover {
     background: #f8f9fa;
+}
+
+.dropdown-item-container:hover:not([style*="cursor: not-allowed"]) {
+    background: #f0f4ff;
 }
 
 .dropdown-item-container:last-child {

@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { doc, getDoc, updateDoc, collection, query, orderBy, limit, getDocs } from 'firebase/firestore'
 import { db } from '../../config/firebase'
 import { generateYogaRecommendations, generateDailyChallenge } from '../../services/geminiService'
+import { enhancedPdfService } from '../../services/enhancedPdfService'
+import { fallbackReportService } from '../../services/fallbackReportService'
+import { achievementService } from '../../services/achievementService'
+import { useToast } from '../../contexts/ToastContext'
 import UserHeader from '../../components/UserHeader/UserHeader'
 import './Dashboard.css'
 
 export default function Dashboard() {
+  const toast = useToast()
+  const location = useLocation()
   const [userData, setUserData] = useState(null)
   const [weeklyData, setWeeklyData] = useState([])
   const [achievements, setAchievements] = useState([])
@@ -14,26 +20,28 @@ export default function Dashboard() {
   const [todaysPlan, setTodaysPlan] = useState(null)
   const [dailyChallenge, setDailyChallenge] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [hasLoadedData, setHasLoadedData] = useState(false)
 
   useEffect(() => {
-    loadUserData()
-  }, [])
-  
-  // Refresh data when component becomes visible (after navigation)
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        console.log('Dashboard visible, refreshing data...')
-        loadUserData()
-      }
-    }
+    // Check if coming from a specific route that requires refresh
+    const shouldRefresh = location.state?.refresh || !hasLoadedData
     
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
-  }, [])
+    if (shouldRefresh) {
+      setHasLoadedData(false) // Force reload
+      loadUserData()
+    }
+  }, [location])
   
   const loadUserData = async () => {
     console.log('Loading dashboard data...')
+    
+    // Check if we already have data cached
+    if (hasLoadedData && userData) {
+      // Use cached data, don't show loading
+      console.log('Using cached dashboard data')
+      return
+    }
+    
     setIsLoading(true)
     const user = JSON.parse(localStorage.getItem('user') || '{}')
     
@@ -60,6 +68,9 @@ export default function Dashboard() {
           
           // Load achievements
           loadAchievements(data, [])
+          
+          // Mark that we've loaded data
+          setHasLoadedData(true)
         }
       } catch (error) {
         console.error('Error loading user data:', error)
@@ -252,6 +263,55 @@ export default function Dashboard() {
     return uniqueDays.length >= targetDays
   }
 
+  // Download comprehensive dashboard report
+  const handleDownloadDashboardReport = async () => {
+    try {
+      // Get all user sessions for comprehensive report
+      const user = JSON.parse(localStorage.getItem('user') || '{}')
+      if (!user.uid) {
+        toast.error('Please log in to download your report.')
+        return
+      }
+
+      toast.info('Generating your comprehensive progress report...')
+
+      const sessionsRef = collection(db, 'users', user.uid, 'sessions')
+      const allSessionsQuery = query(sessionsRef, orderBy('date', 'desc'))
+      const querySnapshot = await getDocs(allSessionsQuery)
+      
+      const allSessions = []
+      querySnapshot.forEach((doc) => {
+        allSessions.push({
+          ...doc.data(),
+          date: doc.data().date || new Date().toISOString()
+        })
+      })
+
+      // Add a small delay to show the loading message
+      setTimeout(async () => {
+        try {
+          // Try enhanced PDF first
+          try {
+            enhancedPdfService.downloadDashboardReport(userData?.yogaProfile || {}, allSessions)
+            toast.success('📊 Professional progress report downloaded successfully!')
+          } catch (pdfError) {
+            console.warn('PDF generation failed, using text fallback:', pdfError)
+            
+            // Fallback to text report
+            fallbackReportService.downloadDashboardReport(userData?.yogaProfile || {}, allSessions)
+            toast.success('📊 Progress report (text) downloaded successfully!')
+          }
+        } catch (error) {
+          console.error('Error generating dashboard report:', error)
+          toast.error('Failed to generate report. Please try again.')
+        }
+      }, 100)
+    } catch (error) {
+      console.error('Error generating dashboard report:', error)
+      toast.error('Failed to generate report. Please try again.')
+    }
+  }
+
   // Calculate real stats from user data and weekly data
   const userStats = userData?.stats || {}
   const totalSessions = weeklyData.length > 0 ? weeklyData.reduce((sum, day) => sum + day.sessions, 0) : 0
@@ -295,10 +355,32 @@ export default function Dashboard() {
             <h1 className="welcome-title">Welcome back, {userData?.name || 'Yogi'}! 🧘‍♀️</h1>
             <p className="welcome-subtitle">Ready to continue your yoga journey? Let's see your progress.</p>
           </div>
-          <Link to="/start" className="start-practice-btn">
-            <span className="btn-icon">🚀</span>
-            Start Practice
-          </Link>
+          <div className="welcome-actions">
+            <Link to="/start" className="start-practice-btn">
+              <span className="btn-icon">🚀</span>
+              Start Practice
+            </Link>
+            <button 
+              onClick={() => {
+                setHasLoadedData(false)
+                loadUserData()
+              }}
+              className="refresh-btn"
+              title="Refresh dashboard data"
+              style={{
+                background: 'transparent',
+                border: '1px solid #e2e8f0',
+                borderRadius: '12px',
+                padding: '0.75rem',
+                cursor: 'pointer',
+                color: '#4a5568',
+                fontSize: '1.2rem',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              🔄
+            </button>
+          </div>
         </div>
         
         {/* Today's Plan Card */}
@@ -501,14 +583,18 @@ export default function Dashboard() {
                 <div className="action-icon">🧘</div>
                 <div className="action-text">Start Practice</div>
               </Link>
+              <Link to="/all-poses" className="action-item">
+                <div className="action-icon">🎯</div>
+                <div className="action-text">All Poses</div>
+              </Link>
               <Link to="/history" className="action-item">
-                <div className="action-icon">📊</div>
+                <div className="action-icon">📈</div>
                 <div className="action-text">View History</div>
               </Link>
-              <Link to="/poses" className="action-item">
-                <div className="action-icon">📚</div>
-                <div className="action-text">Browse Poses</div>
-              </Link>
+              <button onClick={handleDownloadDashboardReport} className="action-item action-button">
+                <div className="action-icon">📋</div>
+                <div className="action-text">Progress Report</div>
+              </button>
               <Link to="/settings" className="action-item">
                 <div className="action-icon">⚙️</div>
                 <div className="action-text">Settings</div>

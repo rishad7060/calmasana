@@ -14,6 +14,7 @@ import UserHeader from '../../components/UserHeader/UserHeader';
 import LiveFeedback from '../../components/LiveFeedback/LiveFeedback';
 import VoiceFeedback from '../../components/VoiceFeedback/VoiceFeedback';
 import SessionSummary from '../../components/SessionSummary/SessionSummary';
+import SessionEndingLoader from '../../components/SessionEndingLoader/SessionEndingLoader';
 
 import './EnhancedYoga.css'
  
@@ -26,7 +27,8 @@ let skeletonColor = 'rgb(255,255,255)'
 // AI Model supported poses (with pose detection)
 const aiSupportedPoses = [
   'Tree', 'Chair', 'Cobra', 'Warrior', 'Dog',
-  'Shoulderstand', 'Traingle'
+  'Shoulderstand', 'Traingle', 'Mountain', 'Child', 
+  'Bridge', 'Plank', 'Cat-Cow', 'Downward Dog'
 ]
 
 // All available poses (includes manual practice poses)
@@ -104,10 +106,17 @@ function EnhancedYoga() {
             const plan = await generateYogaRecommendations(data.yogaProfile)
             setPersonalizedPlan(plan)
             
-            // Set recommended pose as current, but keep all poses available
+            // Set available poses to recommended ones only
             if (plan.poses && plan.poses.length > 0) {
+              const recommendedPoses = plan.poses.map(p => p.name)
+              setAvailablePoses(recommendedPoses)
               setCurrentPose(plan.poses[0].name)
             }
+          } else {
+            // If no profile, show a default recommended set for new users
+            const defaultRecommended = ['Tree', 'Mountain', 'Child', 'Cobra', 'Warrior']
+            setAvailablePoses(defaultRecommended)
+            setCurrentPose('Tree')
           }
         }
       } catch (error) {
@@ -132,6 +141,36 @@ function EnhancedYoga() {
     const timeDiff = (currentTime - startingTime)/1000
     if(flag) {
       setPoseTime(timeDiff)
+      
+      // For manual poses (non-AI supported), calculate accuracy based on hold time
+      if (!aiSupportedPoses.includes(currentPose) && timeDiff > 0) {
+        // Gradually increase accuracy based on hold time
+        // 0-5s: 0-30%, 5-10s: 30-60%, 10-20s: 60-85%, 20s+: 85-95%
+        let calculatedAccuracy = 0
+        if (timeDiff >= 20) {
+          calculatedAccuracy = Math.min(95, 85 + (timeDiff - 20) * 0.5) // Max 95%
+        } else if (timeDiff >= 10) {
+          calculatedAccuracy = 60 + (timeDiff - 10) * 2.5 // 60-85%
+        } else if (timeDiff >= 5) {
+          calculatedAccuracy = 30 + (timeDiff - 5) * 6 // 30-60%
+        } else if (timeDiff >= 2) {
+          calculatedAccuracy = (timeDiff - 2) * 10 // 0-30%
+        }
+        
+        setPoseAccuracy(Math.round(calculatedAccuracy))
+        setIsCorrectPose(calculatedAccuracy >= 60)
+        
+        // Update feedback based on performance
+        if (calculatedAccuracy >= 85) {
+          setFeedback('Excellent form! Keep holding this position.')
+        } else if (calculatedAccuracy >= 60) {
+          setFeedback('Good job! Continue holding for better score.')
+        } else if (calculatedAccuracy >= 30) {
+          setFeedback('Keep going! Hold steady to improve your score.')
+        } else if (timeDiff >= 2) {
+          setFeedback('Getting started... Focus on your form and hold the pose.')
+        }
+      }
     }
     if((currentTime - startingTime)/1000 > bestPerform) {
       setBestPerform(timeDiff)
@@ -161,6 +200,7 @@ function EnhancedYoga() {
     console.log('showSummary state changed:', showSummary)
   }, [showSummary])
 
+
   const CLASS_NO = {
     Chair: 0,
     Cobra: 1,
@@ -170,6 +210,13 @@ function EnhancedYoga() {
     Traingle: 5,
     Tree: 6,
     Warrior: 7,
+    // Temporary mapping for manual poses (until model is retrained)
+    Mountain: 6,        // Map to Tree (similar standing pose)
+    Child: 1,           // Map to Cobra (similar floor pose)
+    Bridge: 4,          // Map to Shoulderstand (similar inversion)
+    Plank: 2,           // Map to Dog (similar arm support)
+    'Cat-Cow': 2,       // Map to Dog (similar on hands and knees)
+    'Downward Dog': 2   // Map to Dog (same pose, different name)
   }
 
   function get_center_point(landmarks, left_bodypart, right_bodypart) {
@@ -405,10 +452,10 @@ function EnhancedYoga() {
         posesAttempted: prev.posesAttempted + 1
       }))
       
-      // Set a default "good" accuracy for manual poses
-      setPoseAccuracy(85)
-      setIsCorrectPose(true)
-      setFeedback(`Great! Hold the ${currentPose} pose. Follow the instructions and focus on your form.`)
+      // Start with no accuracy - it will be calculated based on hold time
+      setPoseAccuracy(0)
+      setIsCorrectPose(false)
+      setFeedback(`Hold the ${currentPose} pose. Your score will improve the longer you maintain proper form.`)
       
       // Start a timer for manual poses
       setStartingTime(Date.now())
@@ -422,48 +469,52 @@ function EnhancedYoga() {
     console.log('stopPose called - starting')
     console.log('Current states:', { isStartPose, sessionEnding, showSummary })
     
-    setSessionEnding(true) // Mark session as ending
+    setSessionEnding(true) // Show loading immediately
     clearInterval(interval)
     flag = false
     
     console.log('Cleared interval, calculating session data...')
     
-    // Calculate session data
+    // Calculate session data - Only use real scores, no artificial minimums
     const endTime = Date.now()
-    const totalTime = sessionData.startTime ? (endTime - sessionData.startTime) / 1000 : Math.max(poseTime, 30) // Minimum 30 seconds
-    const avgScore = sessionScores.length > 0 ? 
-      sessionScores.reduce((sum, score) => sum + score, 0) / sessionScores.length : Math.max(poseAccuracy, 50)
-    const perfectPoses = sessionScores.filter(score => score >= 95).length
+    const totalTime = sessionData.startTime ? (endTime - sessionData.startTime) / 1000 : poseTime
     
-    console.log('Session ending - totalTime:', totalTime, 'avgScore:', avgScore, 'poseTime:', poseTime)
+    // Only count actual valid scores from pose detection
+    const validScores = sessionScores.filter(score => score > 0)
+    const avgScore = validScores.length > 0 ? 
+      Math.round(validScores.reduce((sum, score) => sum + score, 0) / validScores.length) : 0
+    
+    const perfectPoses = validScores.filter(score => score >= 95).length
+    const hasValidSession = totalTime >= 5 && (validScores.length > 0 || poseTime >= 10)
+    
+    console.log('Session ending - totalTime:', totalTime, 'avgScore:', avgScore, 'validScores:', validScores.length, 'poseTime:', poseTime)
     
     const finalSessionData = {
       ...sessionData,
       endTime,
-      totalTime: Math.max(totalTime, 10), // Ensure minimum session time
-      avgScore: Math.round(Math.max(avgScore, 1)), // Ensure non-zero score
-      perfectPoses: perfectPoses > 0 ? perfectPoses : (avgScore >= 95 ? 1 : 0),
-      avgHoldTime: Math.max(poseTime, 5), // Minimum hold time
-      posesAttempted: 1,
-      poseResults: [{
+      totalTime: Math.round(totalTime),
+      avgScore: hasValidSession ? avgScore : 0, // Only show score if session was actually performed
+      perfectPoses,
+      avgHoldTime: Math.round(poseTime),
+      posesAttempted: hasValidSession ? 1 : 0,
+      poseResults: hasValidSession ? [{
         name: currentPose,
-        score: Math.round(Math.max(avgScore, 1)),
-        time: Math.round(Math.max(poseTime, 5)),
+        score: avgScore,
+        time: Math.round(poseTime),
         attempts: 1
-      }]
+      }] : []
     }
     
     console.log('Final session data:', finalSessionData)
     
-    // Immediately save the session
-    console.log('Saving session...')
+    // Set session data for the loader to show preview
+    setSessionData(finalSessionData)
+    
+    // Save session in background during loading
+    console.log('Saving session in background...')
     await handleSaveSession(finalSessionData)
     
-    // Set session data and show summary
-    console.log('Setting session data and showing summary...')
-    setSessionData(finalSessionData)
-    setShowSummary(true)
-    console.log('setShowSummary(true) called')
+    console.log('Session saved, data prepared for summary')
     
     // Save to history
     const newHistoryEntry = {
@@ -472,6 +523,14 @@ function EnhancedYoga() {
       ...finalSessionData
     }
     setPoseHistory(prev => [newHistoryEntry, ...prev])
+  }
+
+  // Handle when loading is complete - transition to summary
+  const handleLoadingComplete = () => {
+    console.log('Loading complete, showing summary...')
+    setSessionEnding(false) // Hide loader
+    setShowSummary(true)    // Show summary
+    console.log('setShowSummary(true) called from loading complete')
     
     console.log('stopPose completed')
   }
@@ -568,6 +627,13 @@ function EnhancedYoga() {
   
   return (
     <>
+      {/* Session Ending Loader - Shows during session processing */}
+      <SessionEndingLoader
+        isVisible={sessionEnding && !showSummary}
+        onComplete={handleLoadingComplete}
+        sessionData={sessionData}
+      />
+      
       {/* Session Summary - Always rendered at top level */}
       <SessionSummary
         sessionData={sessionData}
@@ -734,9 +800,9 @@ function EnhancedYoga() {
             <div className="pose-selection-card">
             {/* Pose Selection Section */}
             <div className="pose-section">
-              <h2 className="section-title">Choose Your Pose</h2>
+              <h2 className="section-title">Recommended for You</h2>
               <p style={{fontSize: '0.8rem', color: '#666', textAlign: 'center', marginBottom: '0.5rem'}}>
-                Available poses: {availablePoses.length} total
+                {availablePoses.length} personalized poses for your practice
               </p>
               <p style={{fontSize: '0.75rem', color: aiSupportedPoses.includes(currentPose) ? '#667eea' : '#f5576c', textAlign: 'center', marginBottom: '1rem', fontWeight: '600'}}>
                 {aiSupportedPoses.includes(currentPose) ? '🤖 AI Detection Mode' : '⏱️ Manual Practice Mode'}

@@ -78,7 +78,11 @@ export default function History() {
     }
 
     const totalSessions = sessionData.length
-    const totalTime = sessionData.reduce((sum, session) => sum + (session.duration || 0), 0)
+    const totalTime = sessionData.reduce((sum, session) => {
+      // Handle both duration (minutes) and totalTime (seconds) formats
+      const timeValue = session.duration || (session.totalTime ? session.totalTime / 60 : 0)
+      return sum + timeValue
+    }, 0)
     const scores = sessionData.map(session => session.avgScore || 0).filter(score => score > 0)
     const averageScore = scores.length > 0 ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length) : 0
     const bestScore = scores.length > 0 ? Math.max(...scores) : 0
@@ -132,7 +136,9 @@ export default function History() {
         case 'score':
           return (b.avgScore || 0) - (a.avgScore || 0)
         case 'duration':
-          return (b.duration || 0) - (a.duration || 0)
+          const aDuration = a.duration || (a.totalTime ? a.totalTime / 60 : 0)
+          const bDuration = b.duration || (b.totalTime ? b.totalTime / 60 : 0)
+          return bDuration - aDuration
         case 'date':
         default:
           return new Date(b.date) - new Date(a.date)
@@ -274,7 +280,14 @@ export default function History() {
                     <div className="session-metrics">
                       <div className="metric">
                         <span className="metric-icon">⏱️</span>
-                        <span>{session.duration || 0} minutes</span>
+                        <span>
+                          {session.duration ? 
+                            `${Math.round(session.duration * 100) / 100} minutes` : 
+                            session.totalTime ? 
+                              `${Math.round(session.totalTime / 60 * 100) / 100} minutes` :
+                              '0 minutes'
+                          }
+                        </span>
                       </div>
                       
                       <div className="metric">

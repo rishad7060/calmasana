@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore'
+import { db } from '../../config/firebase'
+import { enhancedPdfService } from '../../services/enhancedPdfService'
+import { fallbackReportService } from '../../services/fallbackReportService'
+import { achievementService } from '../../services/achievementService'
+import { notificationService } from '../../services/notificationService'
+import { useToast } from '../../contexts/ToastContext'
 import './SessionSummary.css'
 
 export default function SessionSummary({ 
@@ -9,8 +16,14 @@ export default function SessionSummary({
   onSaveSession 
 }) {
   const navigate = useNavigate()
+  const toast = useToast()
   const [achievements, setAchievements] = useState([])
   const [recommendations, setRecommendations] = useState([])
+  const [progressComparison, setProgressComparison] = useState({
+    vsLastSession: 0,
+    vsWeeklyAverage: 0,
+    bestScoreToday: 0
+  })
   
   console.log('SessionSummary render:', { isVisible, sessionData })
 
@@ -18,8 +31,92 @@ export default function SessionSummary({
     if (isVisible && sessionData) {
       generateAchievements()
       generateRecommendations()
+      calculateProgressComparison()
+      checkForNewAchievements()
+      scheduleSessionCompleteNotification()
     }
   }, [isVisible, sessionData])
+
+  // Check for new achievements after session
+  const checkForNewAchievements = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}')
+      if (!user.uid) return
+
+      // Get user profile
+      const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}')
+      
+      // Get all sessions
+      const sessionsRef = collection(db, 'users', user.uid, 'sessions')
+      const allSessionsQuery = query(sessionsRef, orderBy('date', 'desc'))
+      const querySnapshot = await getDocs(allSessionsQuery)
+      
+      const allSessions = []
+      querySnapshot.forEach((doc) => {
+        allSessions.push({
+          ...doc.data(),
+          date: doc.data().date || new Date().toISOString()
+        })
+      })
+
+      // Get previously unlocked achievements
+      const previouslyUnlocked = JSON.parse(localStorage.getItem('unlockedAchievements') || '[]')
+      
+      // Check for new achievements
+      const newAchievements = achievementService.checkAchievements(
+        userProfile, 
+        allSessions, 
+        previouslyUnlocked
+      )
+
+      if (newAchievements.length > 0) {
+        setAchievements(prev => [...prev, ...newAchievements])
+        
+        // Update localStorage with new achievements
+        const updatedUnlocked = [...previouslyUnlocked, ...newAchievements.map(a => a.id)]
+        localStorage.setItem('unlockedAchievements', JSON.stringify(updatedUnlocked))
+      }
+    } catch (error) {
+      console.error('Error checking achievements:', error)
+    }
+  }
+
+  // Schedule session completion notification
+  const scheduleSessionCompleteNotification = () => {
+    notificationService.scheduleSessionCompleteNotification(sessionData)
+  }
+
+  // Download session PDF report
+  const handleDownloadReport = async () => {
+    try {
+      toast.info('Generating your session report...')
+      
+      // Add a small delay to show the loading message
+      setTimeout(async () => {
+        try {
+          const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}')
+          
+          // Try enhanced PDF first
+          try {
+            enhancedPdfService.downloadSessionReport(sessionData, userProfile)
+            toast.success('📄 Professional session report downloaded successfully!')
+          } catch (pdfError) {
+            console.warn('PDF generation failed, using text fallback:', pdfError)
+            
+            // Fallback to text report
+            fallbackReportService.downloadSessionReport(sessionData, userProfile)
+            toast.success('📄 Session report (text) downloaded successfully!')
+          }
+        } catch (error) {
+          console.error('Error generating report:', error)
+          toast.error('Failed to generate report. Please try again.')
+        }
+      }, 100)
+    } catch (error) {
+      console.error('Error generating PDF:', error)
+      toast.error('Failed to generate PDF report. Please try again.')
+    }
+  }
 
   const generateAchievements = () => {
     const newAchievements = []
@@ -85,10 +182,84 @@ export default function SessionSummary({
     setRecommendations(recs)
   }
 
+  const calculateProgressComparison = async () => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}')
+    
+    if (!user.uid || !sessionData) {
+      return
+    }
+
+    try {
+      // Get recent sessions to calculate comparisons
+      const sessionsRef = collection(db, 'users', user.uid, 'sessions')
+      const recentQuery = query(sessionsRef, orderBy('date', 'desc'), limit(10))
+      const querySnapshot = await getDocs(recentQuery)
+      
+      const recentSessions = []
+      querySnapshot.forEach((doc) => {
+        const data = doc.data()
+        recentSessions.push({
+          ...data,
+          date: data.date || data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString()
+        })
+      })
+
+      // Calculate vs last session
+      let vsLastSession = 0
+      if (recentSessions.length > 1) {
+        const lastSession = recentSessions[1] // Second item (first is current session)
+        const currentScore = sessionData.avgScore || 0
+        const lastScore = lastSession.avgScore || 0
+        vsLastSession = currentScore - lastScore
+      }
+
+      // Calculate vs weekly average
+      const oneWeekAgo = new Date()
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+      
+      const weekSessions = recentSessions.filter(session => 
+        new Date(session.date) >= oneWeekAgo
+      )
+      
+      let vsWeeklyAverage = 0
+      if (weekSessions.length > 1) {
+        const weeklyScores = weekSessions.map(s => s.avgScore || 0).filter(s => s > 0)
+        if (weeklyScores.length > 0) {
+          const weeklyAvg = weeklyScores.reduce((sum, score) => sum + score, 0) / weeklyScores.length
+          vsWeeklyAverage = (sessionData.avgScore || 0) - weeklyAvg
+        }
+      }
+
+      // Calculate best score today
+      const today = new Date().toDateString()
+      const todaySessions = recentSessions.filter(session => 
+        new Date(session.date).toDateString() === today
+      )
+      
+      const bestScoreToday = todaySessions.length > 0 ? 
+        Math.max(...todaySessions.map(s => s.avgScore || 0)) : (sessionData.avgScore || 0)
+
+      setProgressComparison({
+        vsLastSession: Math.round(vsLastSession),
+        vsWeeklyAverage: Math.round(vsWeeklyAverage),
+        bestScoreToday: Math.round(bestScoreToday)
+      })
+
+    } catch (error) {
+      console.error('Error calculating progress comparison:', error)
+      // Fallback to basic values
+      setProgressComparison({
+        vsLastSession: 0,
+        vsWeeklyAverage: 0,
+        bestScoreToday: Math.round(sessionData.avgScore || 0)
+      })
+    }
+  }
+
   const handleSaveAndContinue = () => {
     // Data is already saved when stopPose was called
     onClose()
-    navigate('/dashboard')
+    navigate('/dashboard', { state: { refresh: true } })
   }
 
   const handleTryAgain = () => {
@@ -228,21 +399,29 @@ export default function SessionSummary({
           <div className="comparison-stats">
             <div className="comparison-item">
               <div className="comparison-label">vs Last Session</div>
-              <div className="comparison-value positive">+{Math.round(Math.random() * 10)}%</div>
+              <div className={`comparison-value ${progressComparison.vsLastSession > 0 ? 'positive' : progressComparison.vsLastSession < 0 ? 'negative' : 'neutral'}`}>
+                {progressComparison.vsLastSession > 0 ? '+' : ''}{progressComparison.vsLastSession}%
+              </div>
             </div>
             <div className="comparison-item">
               <div className="comparison-label">vs Weekly Average</div>
-              <div className="comparison-value positive">+{Math.round(Math.random() * 5)}%</div>
+              <div className={`comparison-value ${progressComparison.vsWeeklyAverage > 0 ? 'positive' : progressComparison.vsWeeklyAverage < 0 ? 'negative' : 'neutral'}`}>
+                {progressComparison.vsWeeklyAverage > 0 ? '+' : ''}{progressComparison.vsWeeklyAverage}%
+              </div>
             </div>
             <div className="comparison-item">
               <div className="comparison-label">Best Score Today</div>
-              <div className="comparison-value neutral">{Math.round((sessionData?.avgScore || 0) + Math.random() * 5)}%</div>
+              <div className="comparison-value neutral">{progressComparison.bestScoreToday}%</div>
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="summary-actions">
+          <button className="action-btn secondary" onClick={handleDownloadReport}>
+            <span className="btn-icon">📊</span>
+            Professional Report
+          </button>
           <button className="action-btn secondary" onClick={handleTryAgain}>
             <span className="btn-icon">🔄</span>
             Try Again
@@ -254,14 +433,14 @@ export default function SessionSummary({
         </div>
 
         {/* Share Options */}
-        <div className="share-section">
+        {/* <div className="share-section">
           <h4>Share Your Achievement</h4>
           <div className="share-buttons">
             <button className="share-btn">📱 Social</button>
             <button className="share-btn">📧 Email</button>
             <button className="share-btn">📋 Copy Link</button>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )

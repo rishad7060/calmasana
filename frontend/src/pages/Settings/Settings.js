@@ -6,6 +6,7 @@ import { auth, db } from '../../config/firebase'
 import UserHeader from '../../components/UserHeader/UserHeader'
 import { useToast } from '../../contexts/ToastContext'
 import { useTheme } from '../../contexts/ThemeContext'
+import { notificationService, getPracticeTimeSuggestions } from '../../services/notificationService'
 import './Settings.css'
 
 export default function Settings() {
@@ -17,6 +18,8 @@ export default function Settings() {
     voiceGuidance: false,
     notifications: true,
     practiceReminders: true,
+    practiceTime: '07:00',
+    reminderDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
     theme: theme || 'light',
     difficulty: 'beginner'
   })
@@ -129,6 +132,24 @@ export default function Settings() {
           })
         }
         
+        // Set up practice reminders if enabled
+        if (settings.practiceReminders) {
+          try {
+            await notificationService.scheduleDailyReminder({
+              practiceTime: settings.practiceTime,
+              reminderDays: settings.reminderDays,
+              reminderEnabled: true,
+              timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+            })
+            console.log('Notifications scheduled successfully')
+          } catch (notifError) {
+            console.warn('Failed to schedule notifications:', notifError)
+            // Don't fail the entire save for notification issues
+          }
+        } else {
+          notificationService.clearAllReminders()
+        }
+
         // Show success message
         toast.success('Settings saved successfully!')
       } catch (error) {
@@ -280,6 +301,52 @@ export default function Settings() {
                 <span className="toggle-slider"></span>
               </label>
             </div>
+
+            {settings.practiceReminders && (
+              <>
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <label>Practice Time</label>
+                    <span>When would you like to be reminded?</span>
+                  </div>
+                  <select 
+                    value={settings.practiceTime}
+                    onChange={(e) => handleSettingChange('practiceTime', e.target.value)}
+                    className="setting-select"
+                  >
+                    {getPracticeTimeSuggestions(userData?.yogaProfile?.health?.routine).map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <label>Reminder Days</label>
+                    <span>Which days should we remind you?</span>
+                  </div>
+                  <div className="day-selector">
+                    {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(day => (
+                      <label key={day} className="day-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={settings.reminderDays.includes(day)}
+                          onChange={(e) => {
+                            const newDays = e.target.checked 
+                              ? [...settings.reminderDays, day]
+                              : settings.reminderDays.filter(d => d !== day)
+                            handleSettingChange('reminderDays', newDays)
+                          }}
+                        />
+                        <span className="day-label">{day.substring(0, 3).toUpperCase()}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* App Settings */}
