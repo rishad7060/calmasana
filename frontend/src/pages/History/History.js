@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { collection, query, orderBy, getDocs, doc, getDoc } from 'firebase/firestore'
 import { db } from '../../config/firebase'
 import UserHeader from '../../components/UserHeader/UserHeader'
+import Footer from '../../components/Footer/Footer'
 import './History.css'
 
 export default function History() {
@@ -159,11 +160,11 @@ export default function History() {
     })
   }
 
-  const getScoreColor = (score) => {
-    if (score >= 90) return '#10b981'
-    if (score >= 70) return '#f59e0b'
-    if (score >= 50) return '#f97316'
-    return '#ef4444'
+  const getScoreClass = (score) => {
+    if (score >= 90) return 'score-excellent'
+    if (score >= 70) return 'score-good'
+    if (score >= 50) return 'score-average'
+    return 'score-poor'
   }
 
   if (isLoading) {
@@ -171,7 +172,7 @@ export default function History() {
       <div className="history-container">
         <UserHeader />
         <div className="history-loading">
-          <div className="loading-spinner"></div>
+          <div className="loading-spinner-lg"></div>
           <p>Loading your practice history...</p>
         </div>
       </div>
@@ -214,13 +215,13 @@ export default function History() {
             </div>
           </div>
           
-          <div className="stat-card">
+          {/* <div className="stat-card">
             <div className="stat-icon">⭐</div>
             <div className="stat-content">
               <div className="stat-number">{stats.bestScore}%</div>
               <div className="stat-label">Best Score</div>
             </div>
-          </div>
+          </div> */}
           
           <div className="stat-card">
             <div className="stat-icon">🧘</div>
@@ -260,10 +261,7 @@ export default function History() {
                 <div key={session.id} className="session-card">
                   <div className="session-header">
                     <div className="session-date">{formatDate(session.date)}</div>
-                    <div 
-                      className="session-score"
-                      style={{ color: getScoreColor(session.avgScore || 0) }}
-                    >
+                    <div className={`session-score ${getScoreClass(session.avgScore || 0)}`}>
                       {session.avgScore || 0}%
                     </div>
                   </div>
@@ -326,6 +324,7 @@ export default function History() {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

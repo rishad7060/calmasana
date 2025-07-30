@@ -8,9 +8,9 @@
     width: 100%;
     max-width: 300px;
     padding: 0.75rem 1rem;
-    background: #667eea;
+    background: var(--primary);
     color: white;
-    border: 2px solid #667eea;
+    border: 2px solid var(--primary);
     border-radius: 12px;
     font-size: 1rem;
     font-weight: 600;
@@ -19,14 +19,14 @@
 }
 
 #pose-dropdown-btn:hover {
-    background: #5a67d8;
-    border-color: #5a67d8;
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 #pose-dropdown-btn:focus {
-    background: #5a67d8;
+    background: var(--primary-dark);
     color: white;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
     outline: none;
@@ -37,12 +37,12 @@
     max-width: 300px;
     max-height: 300px;
     overflow-y: auto;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border);
     border-radius: 8px;
-    background: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: var(--card);
+    box-shadow: var(--shadow);
     scrollbar-width: thin;
-    scrollbar-color: #cbd5e0 transparent;
+    scrollbar-color: var(--border) transparent;
 }
 
 .dropdown-custom-menu::-webkit-scrollbar {
@@ -54,7 +54,7 @@
 }
 
 .dropdown-custom-menu::-webkit-scrollbar-thumb {
-    background: #cbd5e0;
+    background: var(--border);
     border-radius: 3px;
 }
 
@@ -66,7 +66,7 @@
     padding: 0.75rem;
     cursor: pointer;
     transition: background-color 0.2s ease;
-    border-bottom: 1px solid #f7fafc;
+    border-bottom: 1px solid var(--border-light);
 }
 
 .pose-info-section {
@@ -85,26 +85,26 @@
 }
 
 .ai-mode {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
 }
 
 .manual-mode {
-    background: linear-gradient(135deg, #f093fb, #f5576c);
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
     color: white;
 }
 
 .unavailable {
-    background: #e2e8f0 !important;
-    color: #999 !important;
+    background: var(--border) !important;
+    color: var(--text-muted) !important;
 }
 
 .dropdown-item-container:hover {
-    background: #f8f9fa;
+    background: var(--surface);
 }
 
 .dropdown-item-container:hover:not([style*="cursor: not-allowed"]) {
-    background: #f0f4ff;
+    background: var(--primary-light);
 }
 
 .dropdown-item-container:last-child {
@@ -114,7 +114,7 @@
 .dropdown-item-1 {
     margin: 0;
     font-weight: 500;
-    color: #2d3748;
+    color: var(--text-primary);
 }
 
 .dropdown-img {

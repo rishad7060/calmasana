@@ -4,6 +4,11 @@
   padding: 1rem;
 }
 
+/* Dark mode */
+[data-theme="dark"] .enhanced-yoga-container {
+  background: linear-gradient(135deg, var(--background) 0%, var(--surface) 100%);
+}
+
 /* Pre-Session Layout */
 .pre-session-container {
   max-width: 1200px;
@@ -21,33 +26,33 @@
 }
 
 .pose-selection-card {
-  background: white;
+  background: var(--card);
   padding: 1.5rem;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
   height: fit-content;
 }
 
 /* Section separators within Pose Card */
 .pose-section {
   padding: 1.5rem 0;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
   margin-bottom: 1.5rem;
 }
 
 .settings-section {
   padding: 1.5rem 0;
-  background: #f8f9fa;
+  background: var(--surface);
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   margin-bottom: 1.5rem;
 }
 
 .settings-section h3 {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #2d3748;
+  color: var(--text-primary);
   margin: 0 0 1rem 0;
   text-align: center;
 }
@@ -63,11 +68,11 @@
 }
 
 .instructions-card {
-  background: white;
+  background: var(--card);
   padding: 1.5rem;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
   max-height: 600px;
   overflow-y: auto;
 }
@@ -105,24 +110,39 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
-  background: #f8f9fa;
+  background: var(--surface);
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   border: 2px solid transparent;
   font-size: 0.9rem;
+  color: var(--text-primary);
 }
 
 .sequence-pose:hover {
-  background: #e9ecef;
+  background: var(--border-light);
   transform: translateX(4px);
 }
 
-.sequence-pose.active {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border-color: #667eea;
+.sequence-pose.active:hover {
+  background: #3730a3;
+  transform: translateX(2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
 }
+
+
+
+.sequence-pose.active {
+  background: #4f46e5;
+  color: white;
+  border: 2px solid #4f46e5;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+  transform: translateX(2px);
+  font-weight: 600;
+  position: relative;
+}
+
+
 
 .pose-number {
   width: 24px;
@@ -138,7 +158,9 @@
 }
 
 .sequence-pose.active .pose-number {
-  background: rgba(255, 255, 255, 0.3);
+  background: white;
+  color: #4f46e5;
+  font-weight: 700;
 }
 
 .pose-name {
@@ -147,11 +169,33 @@
   font-size: 0.9rem;
 }
 
+.sequence-pose.active .pose-name {
+  font-weight: 600;
+}
+
 .pose-duration {
   font-size: 0.8rem;
   opacity: 0.8;
   margin-left: auto;
 }
+
+.sequence-pose.active .pose-duration {
+  opacity: 1;
+  font-weight: 600;
+}
+
+.sequence-pose.active::after {
+  content: '✓';
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+}
+
+
 
 .session-tips {
   background: #f0f4ff;
@@ -177,10 +221,10 @@
 .section-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 1rem;
   text-align: center;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -190,7 +234,7 @@
 .settings-card h3 {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 1rem;
   text-align: center;
 }
@@ -208,7 +252,7 @@
   cursor: pointer;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #4a5568;
+  color: var(--text-primary);
 }
 
 .setting-toggle input[type="checkbox"] {
@@ -238,7 +282,7 @@
 }
 
 .setting-toggle input[type="checkbox"]:checked + .toggle-slider {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
 }
 
 .setting-toggle input[type="checkbox"]:checked + .toggle-slider::before {
@@ -247,7 +291,7 @@
 
 /* Start Button */
 .start-session-btn {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: white;
   padding: 1rem 1.5rem;
   border: none;
@@ -259,7 +303,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
   width: 100%;
   max-width: 280px;
   margin: 0 auto;
@@ -268,8 +312,8 @@
 
 .start-session-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-  background: linear-gradient(135deg, #5a67d8, #6b46c1);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
 }
 
 .btn-icon {
@@ -300,7 +344,7 @@
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  border: 4px solid white;
+  border: 4px solid var(--card);
   width: 640px;
   height: 480px;
   background: #000;
@@ -314,10 +358,18 @@
   height: 100%;
   object-fit: cover;
   border-radius: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .webcam-container canvas {
   border-radius: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /* Error and Loading States */
@@ -393,14 +445,14 @@
 .error-message,
 .loading-text {
   font-size: 1.1rem;
-  color: #4a5568;
+  color: var(--text-secondary);
   font-weight: 600;
   margin-bottom: 1.5rem;
   line-height: 1.5;
 }
 
 .retry-btn {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: white;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -412,53 +464,44 @@
 
 .retry-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
 }
 
+/* Large loading spinner for enhanced yoga - use global styles */
 .loading-spinner {
-  width: 60px;
-  height: 60px;
-  border: 6px solid #e2e8f0;
-  border-top: 6px solid #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
   margin-bottom: 1rem;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+/* Spin animation now in global index.css */
 
 /* Performance Overlay */
 .performance-overlay {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.2);
   z-index: 10;
+  color: white;
+  min-width: 160px;
 }
 
 .current-pose-title {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 1rem;
+  color: white;
+  margin-bottom: 0.5rem;
   text-align: center;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .pose-stats {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .stat-item {
@@ -467,17 +510,19 @@
 
 .stat-value {
   display: block;
-  font-size: 2rem;
+  font-size: 1.2rem;
   font-weight: 800;
-  color: #667eea;
+  color: white;
   line-height: 1;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .stat-label {
-  font-size: 0.9rem;
-  color: #4a5568;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 /* Reference Image */
@@ -485,11 +530,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: white;
+  background: var(--card);
   padding: 2rem;
   border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
 }
 
 .reference-pose-img {
@@ -504,7 +549,7 @@
 .reference-label {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #4a5568;
+  color: var(--text-primary);
   text-align: center;
 }
 
@@ -621,6 +666,8 @@
     position: static;
     margin-bottom: 1rem;
     width: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 1rem;
   }
   
   .pose-stats {

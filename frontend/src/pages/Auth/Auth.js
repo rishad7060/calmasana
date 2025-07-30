@@ -166,10 +166,11 @@ export default function Auth() {
         {/* Header */}
         <div className="auth-header">
           <div className="logo">
-            <div className="logo-icon">
-              <span>🧘</span>
-            </div>
-            <span className="logo-text">CalmAsana</span>
+            <img 
+              src="/CalmAsana-logo.png" 
+              alt="CalmAsana" 
+              className="logo-image"
+            />
           </div>
           <button 
             className="back-home-btn"
@@ -222,6 +223,7 @@ export default function Auth() {
                     value={formData.name}
                     onChange={handleInputChange}
                     required={isSignUp}
+                    style={{ paddingLeft: '45px' }}
                   />
                 </div>
               </div>
@@ -265,7 +267,10 @@ export default function Auth() {
               disabled={isLoading}
             >
               {isLoading ? (
-                <span className="loading-spinner">⏳</span>
+                <>
+                  <div className="inline-loading-spinner"></div>
+                  <span>Processing...</span>
+                </>
               ) : (
                 <>
                   {isSignUp ? 'Create Account' : 'Sign In'}

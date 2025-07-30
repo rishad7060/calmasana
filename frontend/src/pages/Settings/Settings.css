@@ -40,20 +40,12 @@
   text-align: center;
 }
 
+/* Large loading spinner for settings - use global styles */
 .loading-spinner {
-  width: 60px;
-  height: 60px;
-  border: 6px solid var(--border);
-  border-top: 6px solid var(--primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
   margin-bottom: 1rem;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+/* Spin animation now in global index.css */
 
 .settings-sections {
   display: flex;

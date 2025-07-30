@@ -34,10 +34,11 @@ export default function UserHeader() {
       <div className="user-header-content">
         {/* Logo */}
         <div className="logo" onClick={handleLogoClick}>
-          <div className="logo-icon">
-            <span>🧘</span>
-          </div>
-          <span className="logo-text">CalmAsana</span>
+          <img 
+            src="/CalmAsana-logo.png" 
+            alt="CalmAsana" 
+            className="logo-image"
+          />
         </div>
 
         {/* User Info */}

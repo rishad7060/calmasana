@@ -107,10 +107,11 @@ export default function Landing() {
       <nav className={`landing-nav ${isScrolled ? 'scrolled' : ''}`}>
         <div className="nav-content">
           <div className="logo">
-            <div className="logo-icon">
-              <span>🧘</span>
-            </div>
-            <span className="logo-text">CalmAsana</span>
+            <img 
+              src="/CalmAsana-logo.png" 
+              alt="CalmAsana" 
+              className="logo-image"
+            />
           </div>
           <button 
             className="mobile-menu-toggle"
@@ -163,10 +164,10 @@ export default function Landing() {
               Start Your Journey
               <span className="btn-arrow">→</span>
             </Link>
-            <button className="hero-btn secondary">
+            {/* <button className="hero-btn secondary">
               Watch Demo
               <span className="play-icon">▶️</span>
-            </button>
+            </button> */}
           </div>
         </div>
       </section>
@@ -265,10 +266,11 @@ export default function Landing() {
           <div className="footer-grid">
             <div className="footer-brand">
               <div className="logo">
-                <div className="logo-icon">
-                  <span>🧘</span>
-                </div>
-                <span className="logo-text">CalmAsana</span>
+                <img 
+                  src="/CalmAsana-logo.png" 
+                  alt="CalmAsana" 
+                  className="logo-image"
+                />
               </div>
               <p className="footer-description">Your personal yoga journey, powered by AI.</p>
             </div>

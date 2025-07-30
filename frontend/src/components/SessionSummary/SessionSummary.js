@@ -270,11 +270,11 @@ export default function SessionSummary({
   if (!isVisible) return null
 
   const getScoreGrade = (score) => {
-    if (score >= 90) return { grade: 'A+', color: '#10b981', emoji: '🌟' }
-    if (score >= 80) return { grade: 'A', color: '#059669', emoji: '⭐' }
-    if (score >= 70) return { grade: 'B', color: '#f59e0b', emoji: '👍' }
-    if (score >= 60) return { grade: 'C', color: '#f97316', emoji: '👌' }
-    return { grade: 'D', color: '#ef4444', emoji: '💪' }
+    if (score >= 90) return { grade: 'A+', colorClass: 'score-excellent', emoji: '🌟' }
+    if (score >= 80) return { grade: 'A', colorClass: 'score-good', emoji: '⭐' }
+    if (score >= 70) return { grade: 'B', colorClass: 'score-average', emoji: '👍' }
+    if (score >= 60) return { grade: 'C', colorClass: 'score-fair', emoji: '👌' }
+    return { grade: 'D', colorClass: 'score-poor', emoji: '💪' }
   }
 
   const scoreGrade = getScoreGrade(sessionData?.avgScore || 0)
@@ -294,10 +294,10 @@ export default function SessionSummary({
         {/* Score Overview */}
         <div className="score-overview">
           <div className="main-score">
-            <div className="score-circle-large" style={{ borderColor: scoreGrade.color }}>
+            <div className={`score-circle-large ${scoreGrade.colorClass}`}>
               <div className="score-emoji">{scoreGrade.emoji}</div>
               <div className="score-number-large">{Math.round(sessionData?.avgScore || 0)}%</div>
-              <div className="score-grade" style={{ color: scoreGrade.color }}>{scoreGrade.grade}</div>
+              <div className={`score-grade ${scoreGrade.colorClass}`}>{scoreGrade.grade}</div>
             </div>
           </div>
           
@@ -331,7 +331,7 @@ export default function SessionSummary({
                 <div className="pose-metrics">
                   <div className="metric">
                     <span className="metric-label">Score:</span>
-                    <span className="metric-value" style={{ color: pose.score >= 80 ? '#10b981' : pose.score >= 60 ? '#f59e0b' : '#ef4444' }}>
+                    <span className={`metric-value ${pose.score >= 80 ? 'score-good' : pose.score >= 60 ? 'score-average' : 'score-poor'}`}>
                       {pose.score}%
                     </span>
                   </div>

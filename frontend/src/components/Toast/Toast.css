@@ -2,9 +2,9 @@
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  background: white;
+  background: var(--card);
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -83,7 +83,7 @@
 
 .toast-content p {
   margin: 0;
-  color: #1f2937;
+  color: var(--text-primary);
   font-size: 0.95rem;
   line-height: 1.5;
 }
@@ -92,7 +92,7 @@
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 0;
   width: 24px;
@@ -105,28 +105,10 @@
 }
 
 .toast-close:hover {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--surface);
+  color: var(--text-primary);
 }
 
-/* Dark mode support */
-[data-theme="dark"] .toast {
-  background: #1f2937;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="dark"] .toast-content p {
-  color: #f3f4f6;
-}
-
-[data-theme="dark"] .toast-close {
-  color: #9ca3af;
-}
-
-[data-theme="dark"] .toast-close:hover {
-  background: #374151;
-  color: #d1d5db;
-}
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {

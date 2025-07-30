@@ -28,14 +28,14 @@
 }
 
 .session-ending-modal {
-  background: white;
+  background: var(--card);
   border-radius: 28px;
   padding: 2.5rem;
   max-width: 480px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-xl);
   animation: modalEnter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   position: relative;
 }
@@ -75,8 +75,8 @@
 .processing-ring {
   width: 80px;
   height: 80px;
-  border: 3px solid #e2e8f0;
-  border-top: 3px solid #667eea;
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--primary);
   border-radius: 50%;
   animation: processingRotate 1s linear infinite;
   position: absolute;
@@ -96,7 +96,7 @@
   transform: translate(-50%, -50%);
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -131,9 +131,9 @@
   border-radius: 50%;
   display: block;
   stroke-width: 3;
-  stroke: #10b981;
+  stroke: var(--success);
   stroke-miterlimit: 10;
-  box-shadow: inset 0px 0px 0px #10b981;
+  box-shadow: inset 0px 0px 0px var(--success);
   animation: checkmarkFill 0.4s ease-in-out 0.4s forwards, checkmarkScale 0.3s ease-in-out 0.9s both;
 }
 
@@ -142,7 +142,7 @@
   stroke-dashoffset: 166;
   stroke-width: 3;
   stroke-miterlimit: 10;
-  stroke: #10b981;
+  stroke: var(--success);
   fill: none;
   animation: checkmarkStroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
 }
@@ -159,14 +159,14 @@
 }
 
 @keyframes checkmarkFill {
-  100% { box-shadow: inset 0px 0px 0px 80px #10b981; }
+  100% { box-shadow: inset 0px 0px 0px 80px var(--success); }
 }
 
 /* Titles */
 .ending-title {
   font-size: 2rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -175,7 +175,7 @@
 }
 
 .ending-subtitle {
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 1rem;
   font-weight: 500;
   margin: 0;
@@ -218,7 +218,7 @@
 .progress-bar {
   width: 100%;
   height: 8px;
-  background: #e5e7eb;
+  background: var(--border);
   border-radius: 10px;
   overflow: hidden;
   position: relative;
@@ -227,7 +227,7 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
   border-radius: 10px;
   position: relative;
   transition: width 0.3s ease-out;
@@ -253,7 +253,7 @@
   text-align: center;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #4b5563;
+  color: var(--text-secondary);
 }
 
 /* Step Indicators */
@@ -274,19 +274,19 @@
 }
 
 .step-item.pending {
-  background: #f9fafb;
+  background: var(--surface);
   opacity: 0.6;
 }
 
 .step-item.active {
-  background: linear-gradient(135deg, #eff6ff, #dbeafe);
-  border: 1px solid #3b82f6;
+  background: linear-gradient(135deg, var(--info-light), var(--info));
+  border: 1px solid var(--info);
   transform: scale(1.02);
 }
 
 .step-item.completed {
-  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-  border: 1px solid #10b981;
+  background: linear-gradient(135deg, var(--success-light), var(--success));
+  border: 1px solid var(--success);
 }
 
 .step-indicator {
@@ -303,17 +303,17 @@
 }
 
 .step-item.pending .step-indicator {
-  background: #e5e7eb;
-  color: #9ca3af;
+  background: var(--border);
+  color: var(--text-muted);
 }
 
 .step-item.active .step-indicator {
-  background: #3b82f6;
+  background: var(--info);
   color: white;
 }
 
 .step-item.completed .step-indicator {
-  background: #10b981;
+  background: var(--success);
   color: white;
 }
 
@@ -337,29 +337,29 @@
 
 .step-label {
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
   flex: 1;
 }
 
 .step-item.pending .step-label {
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 .step-item.active .step-label {
-  color: #1e40af;
+  color: var(--info-dark);
 }
 
 .step-item.completed .step-label {
-  color: #065f46;
+  color: var(--success-dark);
 }
 
 /* Session Preview */
 .session-preview {
   margin-bottom: 1.5rem;
   padding: 1.5rem;
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  background: linear-gradient(135deg, var(--surface), var(--border-light));
   border-radius: 16px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   animation: previewSlideIn 0.6s ease-out 0.6s both;
 }
 
@@ -383,9 +383,9 @@
 .preview-stat {
   text-align: center;
   padding: 1rem;
-  background: white;
+  background: var(--card);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
   transition: transform 0.3s ease;
 }
 
@@ -402,14 +402,14 @@
 .stat-value {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #1f2937;
+  color: var(--text-primary);
   display: block;
   margin-bottom: 0.25rem;
 }
 
 .stat-label {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -438,7 +438,7 @@
 }
 
 .loading-dots {
-  color: #6b7280;
+  color: var(--text-secondary);
   font-weight: 500;
   position: relative;
 }
@@ -531,52 +531,3 @@
   }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .session-ending-modal {
-    background: #1f2937;
-    color: #f9fafb;
-  }
-
-  .ending-title,
-  .ending-subtitle {
-    color: #f9fafb;
-  }
-
-  .progress-bar {
-    background: #374151;
-  }
-
-  .step-item.pending {
-    background: #374151;
-  }
-
-  .step-item.active {
-    background: linear-gradient(135deg, #1e3a8a, #1e40af);
-  }
-
-  .step-item.completed {
-    background: linear-gradient(135deg, #064e3b, #065f46);
-  }
-
-  .session-preview {
-    background: #374151;
-    border-color: #4b5563;
-  }
-
-  .preview-stat {
-    background: #4b5563;
-  }
-
-  .stat-value {
-    color: #f9fafb;
-  }
-
-  .stat-label {
-    color: #d1d5db;
-  }
-
-  .loading-dots {
-    color: #d1d5db;
-  }
-}

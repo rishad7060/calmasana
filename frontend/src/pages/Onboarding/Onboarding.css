@@ -1,14 +1,29 @@
 .onboarding-container {
   min-height: 100vh;
-  background: var(--background);
-  padding: 2rem 1rem;
+  background: linear-gradient(135deg, var(--background) 0%, var(--surface) 100%);
+  padding: 1.5rem 1rem;
   transition: var(--transition);
+  position: relative;
+}
+
+.onboarding-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 80%, rgba(124, 58, 237, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .onboarding-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   animation: fadeIn 0.6s ease-out;
+  position: relative;
+  z-index: 1;
 }
 
 .logo {
@@ -18,71 +33,95 @@
   margin-bottom: 1rem;
 }
 
-.logo-icon {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
-  border-radius: var(--radius-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.8rem;
+.logo-image {
+  height: 58px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+  transition: var(--transition);
 }
 
-.logo-text {
-  font-size: 1.8rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.logo:hover .logo-image {
+  transform: scale(1.05);
 }
 
 .onboarding-content {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .progress-bar {
-  height: 6px;
+  height: 8px;
   background: var(--border);
-  border-radius: 3px;
-  margin-bottom: 3rem;
+  border-radius: 12px;
+  margin-bottom: 2.5rem;
   overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--primary-light));
-  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
 }
 
 .step-indicator {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 3rem;
-  padding: 0 1rem;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  padding: 2rem 1.5rem;
+  position: relative;
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border);
+  width: 100%;
 }
 
 .step {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   flex: 1;
   position: relative;
+  text-align: center;
+  min-height: 80px;
 }
 
 .step:not(:last-child)::after {
   content: '';
   position: absolute;
-  top: 20px;
-  left: 50%;
-  width: 100%;
+  top: 28px;
+  left: calc(50% + 30px);
+  width: calc(100% - 30px);
   height: 2px;
   background: var(--border);
-  z-index: -1;
+  border-radius: 1px;
+  z-index: 0;
+  transition: all 0.3s ease;
 }
 
 .step.completed:not(:last-child)::after {
@@ -90,64 +129,85 @@
 }
 
 .step-circle {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: var(--card);
-  border: 3px solid var(--border);
+  border: 2px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
+  font-size: 1rem;
   color: var(--text-muted);
-  transition: var(--transition);
+  transition: all 0.3s ease;
   position: relative;
   z-index: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .step.active .step-circle {
   background: var(--primary);
   border-color: var(--primary);
   color: white;
-  transform: scale(1.1);
-  box-shadow: 0 0 0 8px rgba(124, 58, 237, 0.1);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2), 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
 .step.completed .step-circle {
   background: var(--success);
   border-color: var(--success);
   color: white;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
 .step.completed .step-circle::after {
   content: '✓';
   position: absolute;
   font-size: 1.2rem;
+  font-weight: 800;
 }
 
 .step-label {
-  font-size: 0.875rem;
-  color: var(--text-muted);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
   text-align: center;
-  font-weight: 500;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: wrap;
+  word-wrap: break-word;
+  max-width: 140px;
 }
 
 .step.active .step-label {
   color: var(--primary);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .step.completed .step-label {
-  color: var(--text-secondary);
+  color: var(--success);
+  font-weight: 600;
 }
 
 .onboarding-card {
   background: var(--card);
-  border-radius: var(--radius-xl);
+  border-radius: 24px;
   padding: 2.5rem;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
   border: 1px solid var(--border);
   animation: slideUp 0.6s ease-out;
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.onboarding-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 24px 24px 0 0;
 }
 
 .onboarding-card h1 {
@@ -168,15 +228,16 @@
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .form-group label {
   display: block;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 0.5rem;
-  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+  font-size: 1.1rem;
+  line-height: 1.4;
 }
 
 .form-group input[type="text"],
@@ -207,46 +268,95 @@
 }
 
 .radio-group {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
 }
 
 .radio-label {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 1.5rem;
   border: 2px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 16px;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: var(--card);
-  flex: 1;
-  min-width: 120px;
-  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .radio-label:hover {
   border-color: var(--primary-light);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.radio-label::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.radio-label > * {
+  position: relative;
+  z-index: 1;
 }
 
 .radio-label input[type="radio"] {
-  display: none;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--primary);
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+  margin-right: 0.5rem;
 }
 
 .radio-label input[type="radio"]:checked + span {
   color: var(--primary);
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.radio-label span {
+  flex: 1;
+  text-align: left;
+  padding-left: 0.5rem;
+}
+
+.radio-label span strong {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+
+.radio-label span small {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
 }
 
 .radio-label input[type="radio"]:checked ~ .radio-label,
 .radio-label:has(input[type="radio"]:checked) {
-  background: rgba(124, 58, 237, 0.05);
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2), 0 4px 15px rgba(124, 58, 237, 0.2);
+  transform: translateY(-2px);
+  background: rgba(124, 58, 237, 0.05);
+}
+
+.radio-label:has(input[type="radio"]:checked) span strong {
+  color: var(--primary);
 }
 
 .select-grid {
@@ -321,7 +431,7 @@
   left: 3px;
   width: 24px;
   height: 24px;
-  background: white;
+  background: var(--card);
   border-radius: 50%;
   transition: var(--transition);
   box-shadow: var(--shadow-sm);
@@ -348,59 +458,201 @@
   gap: 0.5rem;
 }
 
-.navigation-buttons {
+/* Form Actions - Modern Button Styling */
+.form-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 2rem;
-  gap: 1rem;
+  align-items: center;
+  margin-top: 3rem;
+  gap: 1.5rem;
 }
 
-.nav-button {
-  padding: 0.875rem 2rem;
-  border-radius: var(--radius);
+.btn-secondary {
+  padding: 1rem 2rem;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 1rem;
-  min-width: 120px;
-}
-
-.back-button {
+  min-width: 140px;
   background: var(--surface);
   color: var(--text-secondary);
   border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.back-button:hover:not(:disabled) {
-  background: var(--border);
+.btn-secondary:hover:not(:disabled) {
+  background: var(--card);
+  border-color: var(--primary-light);
+  color: var(--text-primary);
   transform: translateX(-4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.next-button {
+.btn-secondary::before {
+  /* content: '→'; */
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+.btn-primary {
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1rem;
+  min-width: 160px;
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: white;
   border: none;
-  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.next-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.5);
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
 }
 
-.nav-button:disabled {
+.btn-primary::after {
+  content: '→';
+  font-size: 1.2rem;
+  margin-left: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.btn-primary:hover::after {
+  transform: translateX(4px);
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-.loading-spinner {
-  display: inline-block;
+/* Loading state */
+.inline-loading-spinner {
   width: 20px;
   height: 20px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   border-top-color: white;
-  animation: spin 0.8s linear infinite;
+  animation: spin 1s ease-in-out infinite;
+}
+
+/* Checkbox Grid Styling */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.2rem 1.5rem;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--card);
+  position: relative;
+  overflow: hidden;
+}
+
+.checkbox-label:hover {
+  border-color: var(--primary-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--primary);
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+}
+
+.checkbox-label:has(input[type="checkbox"]:checked) {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(16, 185, 129, 0.1));
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+}
+
+.checkbox-label:has(input[type="checkbox"]:checked) span {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.checkbox-label span {
+  font-size: 1rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  flex: 1;
+  padding-left: 0.5rem;
+}
+
+/* Toggle preferences styling */
+.preference-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.5rem;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  gap: 2rem;
+}
+
+.toggle-label:hover {
+  border-color: var(--primary-light);
+  background: var(--card);
+}
+
+.toggle-label input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--primary);
+}
+
+.toggle-label span {
+  font-size: 1rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  flex: 1;
+  text-align: left;
+}
+
+/* Inline loading spinner for onboarding buttons - use global styles */
+.loading-spinner {
   margin-right: 0.5rem;
 }
 
@@ -419,11 +671,29 @@
   }
 
   .step-indicator {
-    padding: 0;
+    padding: 1.5rem 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .step {
+    min-height: 70px;
+  }
+
+  .step-circle {
+    width: 44px;
+    height: 44px;
+    font-size: 0.9rem;
   }
 
   .step-label {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
+    max-width: 100px;
+  }
+
+  .step:not(:last-child)::after {
+    top: 22px;
+    left: calc(50% + 25px);
+    width: calc(100% - 25px);
   }
 
   .form-row {
@@ -431,36 +701,50 @@
   }
 
   .radio-group {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
-  .radio-label {
-    min-width: 100%;
+  .checkbox-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  .select-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-
-  .navigation-buttons {
+  .form-actions {
     flex-wrap: wrap;
+    gap: 1rem;
   }
 
-  .nav-button {
+  .btn-primary,
+  .btn-secondary {
     flex: 1;
-    min-width: 100px;
+    min-width: 120px;
   }
 }
 
 @media (max-width: 480px) {
-  .logo-text {
-    font-size: 1.5rem;
+  .step-indicator {
+    padding: 1rem 0.75rem;
+  }
+
+  .step {
+    min-height: 60px;
   }
 
   .step-circle {
-    width: 32px;
-    height: 32px;
-    font-size: 0.875rem;
+    width: 36px;
+    height: 36px;
+    font-size: 0.8rem;
+  }
+
+  .step-label {
+    font-size: 0.7rem;
+    max-width: 80px;
+  }
+
+  .step:not(:last-child)::after {
+    top: 18px;
+    left: calc(50% + 20px);
+    width: calc(100% - 20px);
   }
 
   .onboarding-card {
@@ -493,8 +777,4 @@
   }
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Spin animation now in global index.css */

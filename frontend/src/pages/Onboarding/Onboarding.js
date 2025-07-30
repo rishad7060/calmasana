@@ -570,8 +570,11 @@ export default function Onboarding() {
     <div className="onboarding-container">
       <div className="onboarding-header">
         <div className="logo">
-          <span className="logo-icon">🧘</span>
-          <span className="logo-text">YogaFlow AI</span>
+          <img 
+            src="/CalmAsana-logo.png" 
+            alt="CalmAsana" 
+            className="logo-image"
+          />
         </div>
       </div>
 
@@ -623,7 +626,10 @@ export default function Onboarding() {
               disabled={isLoading}
             >
               {isLoading ? (
-                'Saving...'
+                <>
+                  <div className="inline-loading-spinner"></div>
+                  <span>Saving...</span>
+                </>
               ) : currentStep === steps.length - 1 ? (
                 'Complete Setup'
               ) : (

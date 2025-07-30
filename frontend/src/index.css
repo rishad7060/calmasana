@@ -21,9 +21,17 @@
   --border-light: #f1f5f9;
   
   --success: #10b981;
+  --success-light: #d1fae5;
+  --success-dark: #065f46;
   --error: #ef4444;
+  --error-light: #fee2e2;
+  --error-dark: #991b1b;
   --warning: #f59e0b;
+  --warning-light: #fef3c7;
+  --warning-dark: #92400e;
   --info: #3b82f6;
+  --info-light: #dbeafe;
+  --info-dark: #1e40af;
   
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -60,6 +68,19 @@
   
   --border: #334155;
   --border-light: #475569;
+  
+  --success: #34d399;
+  --success-light: #064e3b;
+  --success-dark: #6ee7b7;
+  --error: #f87171;
+  --error-light: #450a0a;
+  --error-dark: #fca5a5;
+  --warning: #fbbf24;
+  --warning-light: #451a03;
+  --warning-dark: #fcd34d;
+  --info: #60a5fa;
+  --info-light: #0c1e3a;
+  --info-dark: #93c5fd;
   
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
@@ -220,15 +241,71 @@ input:focus, select:focus, textarea:focus {
   }
 }
 
-/* Loading Spinner */
+/* Loading Spinner - Global Base Styles */
 .loading-spinner {
   display: inline-block;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Small Loading Spinner - 20px (default) */
+.loading-spinner,
+.loading-spinner-sm {
   width: 20px;
   height: 20px;
   border: 2px solid var(--border);
-  border-radius: 50%;
   border-top-color: var(--primary);
+}
+
+/* Medium Loading Spinner - 40px */
+.loading-spinner-md {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
   animation: spin 0.8s linear infinite;
+}
+
+/* Large Loading Spinner - 60px */
+.loading-spinner-lg {
+  width: 60px;
+  height: 60px;
+  border: 4px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Inline Loading Spinner for buttons */
+.inline-loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: currentColor;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Global loading container fix - ensure all loading states are centered */
+.loading-container,
+.dashboard-loading,
+.history-loading,
+.settings-loading,
+.auth-loading,
+.onboarding-loading,
+.ai-loading,
+.loading-indicator {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  width: 100% !important;
+  min-height: 400px !important;
 }
 
 @keyframes spin {

@@ -4,6 +4,7 @@ import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore'
 import { signOut } from 'firebase/auth'
 import { auth, db } from '../../config/firebase'
 import UserHeader from '../../components/UserHeader/UserHeader'
+import Footer from '../../components/Footer/Footer'
 import { useToast } from '../../contexts/ToastContext'
 import { useTheme } from '../../contexts/ThemeContext'
 import { notificationService, getPracticeTimeSuggestions } from '../../services/notificationService'
@@ -190,7 +191,7 @@ export default function Settings() {
       <div className="settings-container">
         <UserHeader />
         <div className="settings-loading">
-          <div className="loading-spinner"></div>
+          <div className="loading-spinner-lg"></div>
           <p>Loading settings...</p>
         </div>
       </div>
@@ -387,6 +388,7 @@ export default function Settings() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

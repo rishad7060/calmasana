@@ -50,24 +50,16 @@
   gap: 0.5rem;
 }
 
-.logo-icon {
-  width: 32px;
-  height: 32px;
-  background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
-  border-radius: var(--radius-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
+.logo-image {
+  height: 50px;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+  transition: var(--transition);
 }
 
-.logo-text {
-  font-size: 1.25rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.logo:hover .logo-image {
+  transform: scale(1.05);
 }
 
 .nav-links {
@@ -122,13 +114,14 @@
   }
 
   .hero-title {
-    font-size: 2rem;
+    font-size: 1.875rem;
     line-height: 1.2;
   }
 
   .hero-description {
     font-size: 1rem;
-    margin: 1.5rem 0;
+    margin: 1.25rem 0;
+    line-height: 1.5;
   }
 
   .hero-buttons {
@@ -138,7 +131,10 @@
 
   .hero-btn {
     width: 100%;
+    max-width: 320px;
     justify-content: center;
+    padding: 0.8rem 1.5rem;
+    font-size: 0.95rem;
   }
 
   .stats-grid {
@@ -228,7 +224,7 @@
     grid-template-columns: 1fr;
   }
   .hero-title {
-    font-size: 1.75rem;
+    font-size: 1.625rem;
   }
 
   .hero-badge {
@@ -242,7 +238,7 @@
   }
 
   .stat-number {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .feature-icon {
@@ -257,7 +253,7 @@
   }
 
   .feature-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .feature-description {
@@ -275,7 +271,7 @@
   }
 
   .pose-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .pose-description {
@@ -283,7 +279,7 @@
   }
 
   .cta-title {
-    font-size: 1.75rem;
+    font-size: 1.625rem;
   }
 
   .cta-description {
@@ -426,10 +422,11 @@
 }
 
 .hero-title {
-  font-size: 2.75rem;
-  font-weight: 800;
+  font-size: 2.25rem;
+  font-weight: 700;
   color: white;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
   line-height: 1.2;
 }
 
@@ -442,9 +439,9 @@
 }
 
 .hero-description {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
   line-height: 1.6;
   max-width: 600px;
   margin-left: auto;
@@ -459,9 +456,9 @@
 }
 
 .hero-btn {
-  padding: 1rem 2rem;
+  padding: 0.875rem 1.75rem;
   border-radius: 12px;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -528,14 +525,16 @@
 }
 
 .stat-number {
-  font-size: 3rem;
-  font-weight: 800;
+  font-size: 2.25rem;
+  font-weight: 700;
   margin-bottom: 0.5rem;
+  line-height: 1.1;
 }
 
 .stat-label {
-  font-size: 1.1rem;
+  font-size: 1rem;
   opacity: 0.9;
+  line-height: 1.3;
 }
 
 /* Sections */
@@ -562,17 +561,19 @@
 }
 
 .section-title {
-  font-size: 2.25rem;
+  font-size: 1.875rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 1rem;
+  line-height: 1.2;
 }
 
 .section-description {
-  font-size: 1.2rem;
-  color: #718096;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
   max-width: 600px;
   margin: 0 auto;
+  line-height: 1.5;
   line-height: 1.6;
 }
 
@@ -620,10 +621,11 @@
 .feature-indigo .feature-icon { background: linear-gradient(135deg, #6366f1, #4f46e5); }
 
 .feature-title {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.1rem;
+  font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.75rem;
+  line-height: 1.3;
   line-height: 1.3;
 }
 
@@ -706,10 +708,11 @@
 }
 
 .pose-title {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.1rem;
+  font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.75rem;
+  line-height: 1.3;
   line-height: 1.3;
 }
 
@@ -856,10 +859,11 @@
 }
 
 .cta-title {
-  font-size: 2.25rem;
+  font-size: 1.875rem;
   font-weight: 700;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
   color: var(--text-primary);
+  line-height: 1.2;
 }
 
 .cta-description {
@@ -905,12 +909,6 @@
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 3rem;
   margin-bottom: 3rem;
-}
-
-.footer-brand .logo-text {
-  color: white;
-  background: none;
-  -webkit-text-fill-color: white;
 }
 
 .footer-description {

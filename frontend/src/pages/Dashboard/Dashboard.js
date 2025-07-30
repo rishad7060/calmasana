@@ -8,6 +8,7 @@ import { fallbackReportService } from '../../services/fallbackReportService'
 import { achievementService } from '../../services/achievementService'
 import { useToast } from '../../contexts/ToastContext'
 import UserHeader from '../../components/UserHeader/UserHeader'
+import Footer from '../../components/Footer/Footer'
 import './Dashboard.css'
 
 export default function Dashboard() {
@@ -337,7 +338,7 @@ export default function Dashboard() {
       <div className="dashboard-container">
         <UserHeader />
         <div className="dashboard-loading">
-          <div className="loading-spinner"></div>
+          <div className="loading-spinner-lg"></div>
           <p>Loading your yoga journey...</p>
         </div>
       </div>
@@ -399,7 +400,10 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
-            <Link to="/start" className="start-plan-btn">Start This Plan</Link>
+            <Link to="/start" className="start-plan-btn">
+              <span>▶</span>
+              Start This Plan
+            </Link>
           </div>
         )}
         
@@ -603,6 +607,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

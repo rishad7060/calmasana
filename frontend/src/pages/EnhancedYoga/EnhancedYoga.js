@@ -309,22 +309,31 @@ function EnhancedYoga() {
       const video = webcamRef.current.video
       const pose = await detector.estimatePoses(video)
       const ctx = canvasRef.current.getContext('2d')
-      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      
+      // Keep canvas at original video dimensions for proper coordinate mapping
+      const canvas = canvasRef.current
+      canvas.width = 640
+      canvas.height = 480
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       try {
         const keypoints = pose[0].keypoints
+        
         let input = keypoints.map((keypoint) => {
-          if(keypoint.score > 0.4) {
+          if(keypoint.score > 0.3) {  // Lowered threshold for better detection
             if(!(keypoint.name === 'left_eye' || keypoint.name === 'right_eye')) {
               drawPoint(ctx, keypoint.x, keypoint.y, 8, 'rgb(255,255,255)')
               let connections = keypointConnections[keypoint.name]
               try {
                 connections.forEach((connection) => {
                   let conName = connection.toUpperCase()
-                  drawSegment(ctx, [keypoint.x, keypoint.y],
-                      [keypoints[POINTS[conName]].x,
-                       keypoints[POINTS[conName]].y]
-                  , skeletonColor)
+                  const connectedKeypoint = keypoints[POINTS[conName]]
+                  if (connectedKeypoint && connectedKeypoint.score > 0.3) {
+                    drawSegment(ctx, [keypoint.x, keypoint.y],
+                        [connectedKeypoint.x, connectedKeypoint.y]
+                    , skeletonColor)
+                  }
                 })
               } catch(err) {
                 // Connection not found, skip
@@ -336,7 +345,9 @@ function EnhancedYoga() {
           return [keypoint.x, keypoint.y]
         }) 
         
-        if(notDetected > 4) {
+        console.log('Keypoints detected:', keypoints.length, 'Not detected:', notDetected)
+        
+        if(notDetected > 8) {  // Increased threshold to be less strict
           skeletonColor = 'rgb(255,255,255)'
           setPoseAccuracy(0)
           setIsCorrectPose(false)
@@ -345,20 +356,25 @@ function EnhancedYoga() {
         }
         
         const processedInput = landmarks_to_embedding(input)
+        console.log('Processed input shape:', processedInput.shape)
+        
         const classification = poseClassifier.predict(processedInput)
         
         classification.array().then((data) => { 
           const classNo = CLASS_NO[currentPose]
-          console.log('Pose:', currentPose, 'ClassNo:', classNo, 'Prediction:', data[0])
+          console.log('Current pose:', currentPose, 'ClassNo:', classNo)
+          console.log('Full prediction array:', data[0])
+          console.log('All class probabilities:', data[0].map((prob, idx) => `Class ${idx}: ${(prob * 100).toFixed(1)}%`))
           
           if (classNo === undefined) {
             console.warn('Unknown pose:', currentPose)
+            setFeedback(`Pose "${currentPose}" not recognized in classification system`)
             return
           }
           
           const probability = data[0][classNo]
           const accuracy = Math.round(probability * 100)
-          console.log('Probability:', probability, 'Accuracy:', accuracy)
+          console.log('Target class probability:', probability, 'Accuracy:', accuracy)
           
           setPoseAccuracy(accuracy)
           
@@ -680,7 +696,7 @@ function EnhancedYoga() {
                 </div>
               ) : modelLoading ? (
                 <div className="loading-indicator">
-                  <div className="loading-spinner"></div>
+                  <div className="loading-spinner-lg"></div>
                   <div className="loading-text">Loading AI models...</div>
                 </div>
               ) : (
@@ -703,23 +719,16 @@ function EnhancedYoga() {
                       facingMode: "user"
                     }}
                     style={{
-                      borderRadius: '16px',
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover'
+                      borderRadius: '16px'
                     }}
                   />
                   <canvas
                     ref={canvasRef}
                     id="my-canvas"
-                    width='640'
-                    height='480'
                     style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      zIndex: 1,
+                      zIndex: 2,
                       borderRadius: '16px',
+                      pointerEvents: 'none'
                     }}
                   >
                   </canvas>

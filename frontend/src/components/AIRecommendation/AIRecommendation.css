@@ -24,13 +24,14 @@
 }
 
 .ai-recommendation-modal {
-  background: white;
+  background: var(--card);
   border-radius: 24px;
   max-width: 800px;
   max-height: 90vh;
   overflow-y: auto;
   width: 100%;
   animation: slideUp 0.4s ease;
+  border: 1px solid var(--border);
 }
 
 @keyframes slideUp {
@@ -86,24 +87,12 @@
   text-align: center;
 }
 
+/* Large loading spinner for AI recommendation - use global styles */
 .loading-spinner {
-  width: 60px;
-  height: 60px;
-  border: 4px solid #f0f0f0;
-  border-top: 4px solid #667eea;
-  border-radius: 50%;
   margin: 0 auto 2rem;
-  animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
+/* Spin animation now in global index.css */
 
 .loading-steps {
   max-width: 400px;
@@ -162,12 +151,12 @@
 
 .recommendation-card h3 {
   font-size: 1.5rem;
-  color: #2c3e50;
+  color: var(--text-primary);
   margin: 0 0 0.5rem 0;
 }
 
 .session-intention {
-  color: #666;
+  color: var(--text-secondary);
   font-style: italic;
   margin-bottom: 1.5rem;
 }
@@ -177,7 +166,7 @@
   gap: 2rem;
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: #f8f9fa;
+  background: var(--surface);
   border-radius: 12px;
 }
 
@@ -189,13 +178,13 @@
 
 .overview-label {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .overview-value {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .poses-preview {
@@ -203,7 +192,7 @@
 }
 
 .poses-preview h4 {
-  color: #2c3e50;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
@@ -218,21 +207,21 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: #f8f9fa;
+  background: var(--surface);
   border-radius: 12px;
   border: 2px solid transparent;
   transition: all 0.3s ease;
 }
 
 .pose-item:hover {
-  border-color: #667eea;
+  border-color: var(--primary);
   transform: translateX(4px);
 }
 
 .pose-number {
   width: 32px;
   height: 32px;
-  background: #667eea;
+  background: var(--primary);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -251,30 +240,31 @@
 
 .pose-name {
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .pose-duration {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 .pose-benefit {
   width: 100%;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
   margin-top: 0.5rem;
 }
 
 .ai-tips {
-  background: #e9f5ff;
+  background: var(--surface);
   padding: 1.5rem;
   border-radius: 12px;
   margin-bottom: 2rem;
+  border: 1px solid var(--border);
 }
 
 .ai-tips h4 {
-  color: #2c3e50;
+  color: var(--text-primary);
   margin: 0 0 1rem 0;
 }
 
@@ -297,24 +287,26 @@
 
 .insight-box {
   padding: 1.5rem;
-  background: #f0f4ff;
+  background: var(--surface);
   border-radius: 12px;
-  border-left: 4px solid #667eea;
+  border-left: 4px solid var(--primary);
+  border: 1px solid var(--border);
 }
 
 .insight-box.caution {
-  background: #fff8e1;
-  border-left-color: #ffc107;
+  background: var(--surface);
+  border-left-color: var(--warning);
+  border: 1px solid var(--border);
 }
 
 .insight-box h5 {
   margin: 0 0 0.5rem 0;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .insight-box p {
   margin: 0;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -351,9 +343,9 @@
 }
 
 .regenerate-btn {
-  background: white;
-  color: #667eea;
-  border: 2px solid #667eea;
+  background: var(--card);
+  color: var(--primary);
+  border: 2px solid var(--primary);
   padding: 1rem 2rem;
   border-radius: 12px;
   font-size: 1rem;
@@ -363,7 +355,7 @@
 }
 
 .regenerate-btn:hover {
-  background: #f0f4ff;
+  background: var(--surface);
   transform: translateY(-2px);
 }
 

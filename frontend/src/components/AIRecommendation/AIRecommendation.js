@@ -6,6 +6,7 @@ import './AIRecommendation.css'
 export default function AIRecommendation({ yogaProfile, onComplete }) {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(true)
+  const [isRegenerating, setIsRegenerating] = useState(false)
   const [recommendation, setRecommendation] = useState(null)
   const [error, setError] = useState('')
 
@@ -13,16 +14,22 @@ export default function AIRecommendation({ yogaProfile, onComplete }) {
     generateRecommendation()
   }, [])
 
-  const generateRecommendation = async () => {
+  const generateRecommendation = async (isRegenerate = false) => {
     try {
-      setIsLoading(true)
+      if (isRegenerate) {
+        setIsRegenerating(true)
+      } else {
+        setIsLoading(true)
+      }
       const result = await generateYogaRecommendations(yogaProfile)
       setRecommendation(result)
+      setError('')
     } catch (error) {
       console.error('Error generating recommendation:', error)
       setError('Failed to generate recommendations. Please try again.')
     } finally {
       setIsLoading(false)
+      setIsRegenerating(false)
     }
   }
 
@@ -44,7 +51,7 @@ export default function AIRecommendation({ yogaProfile, onComplete }) {
 
         {isLoading ? (
           <div className="ai-loading">
-            <div className="loading-spinner"></div>
+            <div className="loading-spinner-lg"></div>
             <p>Our AI is analyzing your profile...</p>
             <div className="loading-steps">
               <div className="step active">Reviewing your health information</div>
@@ -55,8 +62,19 @@ export default function AIRecommendation({ yogaProfile, onComplete }) {
         ) : error ? (
           <div className="ai-error">
             <p>{error}</p>
-            <button onClick={generateRecommendation} className="retry-btn">
-              Try Again
+            <button 
+              onClick={() => generateRecommendation()} 
+              className="retry-btn"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <div className="inline-loading-spinner"></div>
+                  <span>Trying Again...</span>
+                </>
+              ) : (
+                'Try Again'
+              )}
             </button>
           </div>
         ) : recommendation ? (
@@ -126,8 +144,19 @@ export default function AIRecommendation({ yogaProfile, onComplete }) {
                 Start Your Journey
                 <span className="btn-arrow">→</span>
               </button>
-              <button onClick={generateRecommendation} className="regenerate-btn">
-                Generate Different Plan
+              <button 
+                onClick={() => generateRecommendation(true)} 
+                className="regenerate-btn"
+                disabled={isRegenerating}
+              >
+                {isRegenerating ? (
+                  <>
+                    <div className="inline-loading-spinner"></div>
+                    <span>Generating...</span>
+                  </>
+                ) : (
+                  'Generate Different Plan'
+                )}
               </button>
             </div>
           </div>

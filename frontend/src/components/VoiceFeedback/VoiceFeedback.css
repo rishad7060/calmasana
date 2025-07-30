@@ -14,31 +14,31 @@
   align-items: center;
   gap: 0.5rem;
   padding: 1rem 1.5rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--card);
   backdrop-filter: blur(20px);
-  border: 2px solid rgba(102, 126, 234, 0.3);
+  border: 2px solid rgba(124, 58, 237, 0.3);
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow);
   font-weight: 600;
-  color: #4a5568;
+  color: var(--text-primary);
 }
 
 .voice-toggle-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-  border-color: rgba(102, 126, 234, 0.5);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(124, 58, 237, 0.5);
 }
 
 .voice-toggle-btn.active {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: white;
   border-color: transparent;
 }
 
 .voice-toggle-btn.active:hover {
-  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 12px 35px rgba(124, 58, 237, 0.4);
 }
 
 .voice-icon {
@@ -57,12 +57,12 @@
 
 /* Voice Settings Panel */
 .voice-settings-panel {
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--card);
   backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 1.5rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
   min-width: 280px;
   animation: slideUpFade 0.3s ease-out;
 }
@@ -86,7 +86,7 @@
 .settings-header h4 {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #2d3748;
+  color: var(--text-primary);
   margin: 0;
   display: flex;
   align-items: center;
@@ -103,7 +103,7 @@
   display: block;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #4a5568;
+  color: var(--text-secondary);
   margin-bottom: 0.5rem;
 }
 
@@ -111,7 +111,7 @@
   width: 100%;
   height: 6px;
   border-radius: 3px;
-  background: #e2e8f0;
+  background: var(--border);
   outline: none;
   cursor: pointer;
   appearance: none;
@@ -122,7 +122,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
   transition: all 0.3s ease;
@@ -137,7 +137,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   cursor: pointer;
   border: none;
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
@@ -147,18 +147,18 @@
 .voice-select {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border);
   border-radius: 8px;
-  background: white;
+  background: var(--card);
   font-size: 0.9rem;
-  color: #4a5568;
+  color: var(--text-primary);
   cursor: pointer;
   transition: border-color 0.3s ease;
 }
 
 .voice-select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
@@ -207,7 +207,7 @@
 /* Voice Status */
 .voice-status {
   padding-top: 1rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border);
 }
 
 .status-indicator {
@@ -221,7 +221,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #e2e8f0;
+  background: var(--border);
   transition: all 0.3s ease;
 }
 
@@ -245,18 +245,18 @@
 
 .status-text {
   font-size: 0.85rem;
-  color: #4a5568;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .last-message {
   font-size: 0.8rem;
-  color: #718096;
+  color: var(--text-muted);
   font-style: italic;
-  background: #f8fafc;
+  background: var(--surface);
   padding: 0.5rem;
   border-radius: 6px;
-  border-left: 3px solid #667eea;
+  border-left: 3px solid var(--primary);
 }
 
 /* Audio Visualizer */
@@ -265,11 +265,11 @@
   align-items: center;
   justify-content: center;
   padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--card);
   backdrop-filter: blur(20px);
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
 }
 
 .sound-wave {
@@ -281,7 +281,7 @@
 
 .wave-bar {
   width: 4px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   border-radius: 2px;
   animation: wave 1.5s ease-in-out infinite;
 }
@@ -353,38 +353,3 @@
   }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .voice-toggle-btn {
-    background: rgba(45, 55, 72, 0.95);
-    color: #f7fafc;
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-  
-  .voice-settings-panel {
-    background: rgba(45, 55, 72, 0.98);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  .settings-header h4,
-  .setting-label,
-  .status-text {
-    color: #f7fafc;
-  }
-  
-  .voice-select {
-    background: #2d3748;
-    border-color: #4a5568;
-    color: #f7fafc;
-  }
-  
-  .last-message {
-    background: #2d3748;
-    color: #a0aec0;
-    border-left-color: #667eea;
-  }
-  
-  .audio-visualizer {
-    background: rgba(45, 55, 72, 0.95);
-  }
-}
