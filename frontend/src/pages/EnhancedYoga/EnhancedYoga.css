@@ -1,0 +1,760 @@
+.enhanced-yoga-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 1rem;
+}
+
+/* Pre-Session Layout */
+.pre-session-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.main-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.pose-selection-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  height: fit-content;
+}
+
+/* Section separators within Pose Card */
+.pose-section {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 1.5rem;
+}
+
+.settings-section {
+  padding: 1.5rem 0;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 1.5rem;
+}
+
+.settings-section h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+/* Start Section Inline */
+.start-section-inline {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f0f4ff, #e6f3ff);
+  border-radius: 12px;
+  border: 1px solid #d1ecf1;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.instructions-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* Personalized Plan Styles */
+.personalized-info {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #f0f0f0;
+}
+
+.personalized-info h4 {
+  color: #667eea;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.session-intention {
+  color: #666;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.pose-sequence {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.sequence-pose {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  font-size: 0.9rem;
+}
+
+.sequence-pose:hover {
+  background: #e9ecef;
+  transform: translateX(4px);
+}
+
+.sequence-pose.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-color: #667eea;
+}
+
+.pose-number {
+  width: 24px;
+  height: 24px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.sequence-pose.active .pose-number {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.pose-name {
+  flex: 1;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.pose-duration {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-left: auto;
+}
+
+.session-tips {
+  background: #f0f4ff;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.session-tips h5 {
+  margin: 0 0 0.5rem 0;
+  color: #667eea;
+  font-size: 0.95rem;
+}
+
+.session-tips p {
+  margin: 0.25rem 0;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Settings */
+.settings-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.setting-toggle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.setting-toggle input[type="checkbox"] {
+  display: none;
+}
+
+.toggle-slider {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  background: #e2e8f0;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background: white;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.setting-toggle input[type="checkbox"]:checked + .toggle-slider {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.setting-toggle input[type="checkbox"]:checked + .toggle-slider::before {
+  transform: translateX(30px);
+}
+
+/* Start Button */
+.start-session-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.start-session-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #5a67d8, #6b46c1);
+}
+
+.btn-icon {
+  font-size: 1.3rem;
+}
+
+.btn-arrow {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.start-session-btn:hover .btn-arrow {
+  transform: translateX(6px);
+}
+
+/* Practice Session Layout */
+.main-practice-area {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 3rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.webcam-container {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border: 4px solid white;
+  width: 640px;
+  height: 480px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.webcam-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.webcam-container canvas {
+  border-radius: 16px;
+}
+
+/* Error and Loading States */
+.camera-error,
+.loading-indicator,
+.manual-practice-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  text-align: center;
+  padding: 2rem;
+}
+
+.manual-practice-container {
+  background: linear-gradient(135deg, #f0f4ff, #e6f3ff);
+  border: 2px dashed #667eea;
+}
+
+.manual-practice-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.8;
+}
+
+.manual-practice-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 1rem;
+}
+
+.manual-practice-description {
+  font-size: 1rem;
+  color: #4a5568;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  max-width: 400px;
+}
+
+.pose-timer {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid #667eea;
+}
+
+.timer-display {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #667eea;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.timer-label {
+  font-size: 1rem;
+  color: #4a5568;
+  font-weight: 600;
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.error-message,
+.loading-text {
+  font-size: 1.1rem;
+  color: #4a5568;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.retry-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #e2e8f0;
+  border-top: 6px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Performance Overlay */
+.performance-overlay {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 10;
+}
+
+.current-pose-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pose-stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #667eea;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #4a5568;
+  font-weight: 600;
+}
+
+/* Reference Image */
+.reference-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.reference-pose-img {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.reference-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4a5568;
+  text-align: center;
+}
+
+/* Control Panel */
+.control-panel {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.stop-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+}
+
+.stop-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(239, 68, 68, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+  .enhanced-yoga-container {
+    padding: 1rem;
+  }
+  
+  .main-practice-area {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .webcam-container #webcam,
+  .webcam-container #my-canvas {
+    position: static !important;
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .enhanced-yoga-container {
+    padding: 0.5rem;
+  }
+  
+  .main-content-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .pose-selection-card,
+  .instructions-card {
+    padding: 1rem;
+  }
+  
+  .instructions-card {
+    max-height: 400px;
+  }
+  
+  .section-title {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .settings-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .settings-section {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+  }
+  
+  .personalized-info {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+  
+  .pose-sequence {
+    max-height: 150px;
+  }
+  
+  .start-section-inline {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+  
+  .start-session-btn {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.95rem;
+    max-width: 250px;
+  }
+  
+  .reference-pose-img {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .performance-overlay {
+    position: static;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+  
+  .pose-stats {
+    justify-content: center;
+  }
+  
+  .webcam-container {
+    width: 100%;
+    max-width: 480px;
+  }
+}
+
+@media (max-width: 480px) {
+  .enhanced-yoga-container {
+    padding: 0.5rem;
+  }
+  
+  .pose-selection-card,
+  .instructions-card,
+  .settings-card {
+    padding: 1rem;
+  }
+  
+  .start-session-btn {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .reference-pose-img {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+  }
+  
+  .current-pose-title {
+    font-size: 1.25rem;
+  }
+  
+  .pose-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Animation Enhancements */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.pose-selection-card,
+.instructions-card,
+.settings-card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.performance-overlay {
+  animation: fadeInScale 0.5s ease-out;
+}
+
+.reference-image-container {
+  animation: slideInUp 0.8s ease-out;
+}
+
+/* Skeleton Animation for Loading */
+.webcam-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  z-index: -1;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Enhanced Hover Effects */
+.pose-selection-card:hover,
+.instructions-card:hover,
+.settings-card:hover,
+.reference-image-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.reference-pose-img:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+/* Pulse Animation for Important Elements */
+.start-session-btn {
+  animation: pulse-shadow 3s infinite;
+}
+
+@keyframes pulse-shadow {
+  0% {
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+  }
+  100% {
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+  }
+}

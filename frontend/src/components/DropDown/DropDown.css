@@ -1,0 +1,117 @@
+.dropdown-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#pose-dropdown-btn {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.75rem 1rem;
+    background: #667eea;
+    color: white;
+    border: 2px solid #667eea;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#pose-dropdown-btn:hover {
+    background: #5a67d8;
+    border-color: #5a67d8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+#pose-dropdown-btn:focus {
+    background: #5a67d8;
+    color: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    outline: none;
+}
+
+.dropdown-custom-menu {
+    width: 100%;
+    max-width: 300px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 transparent;
+}
+
+.dropdown-custom-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-custom-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dropdown-custom-menu::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 3px;
+}
+
+.dropdown-item-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f7fafc;
+}
+
+.pose-info-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+}
+
+.pose-mode-badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    margin-top: 0.25rem;
+}
+
+.ai-mode {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.manual-mode {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: white;
+}
+
+.dropdown-item-container:hover {
+    background: #f8f9fa;
+}
+
+.dropdown-item-container:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item-1 {
+    margin: 0;
+    font-weight: 500;
+    color: #2d3748;
+}
+
+.dropdown-img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-right: 0.75rem;
+}
