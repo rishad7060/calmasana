@@ -7,7 +7,7 @@ import Webcam from 'react-webcam'
 import { count } from '../../utils/music'; 
 import { doc, getDoc, collection, addDoc, updateDoc, arrayUnion } from 'firebase/firestore'
 import { db } from '../../config/firebase'
-import { generateYogaRecommendations } from '../../services/geminiService'
+import { generateYogaRecommendations, AI_SUPPORTED_POSES } from '../../services/geminiService'
  
 import Instructions from '../../components/Instrctions/Instructions';
 import UserHeader from '../../components/UserHeader/UserHeader';
@@ -24,18 +24,13 @@ import { POINTS, keypointConnections } from '../../utils/data';
 import { drawPoint, drawSegment } from '../../utils/helper'
 
 let skeletonColor = 'rgb(255,255,255)'
-// AI Model supported poses (with pose detection)
-const aiSupportedPoses = [
-  'Tree', 'Chair', 'Cobra', 'Warrior', 'Dog',
-  'Shoulderstand', 'Traingle', 'Mountain', 'Child', 
-  'Bridge', 'Plank', 'Cat-Cow', 'Downward Dog'
-]
 
-// All available poses (includes manual practice poses)
+// All available poses (prioritizing AI-supported ones)
 let poseList = [
-  'Tree', 'Chair', 'Cobra', 'Warrior', 'Dog',
-  'Shoulderstand', 'Traingle', 'Mountain', 'Child', 
-  'Bridge', 'Plank', 'Cat-Cow', 'Downward Dog'
+  // AI-supported poses first (prioritized)
+  'Tree', 'Chair', 'Cobra', 'Warrior', 'Dog', 'Shoulderstand', 'Traingle',
+  // Manual poses last
+  'Mountain', 'Child', 'Bridge', 'Plank', 'Cat-Cow', 'Downward Dog'
 ]
 
 let interval
@@ -143,7 +138,7 @@ function EnhancedYoga() {
       setPoseTime(timeDiff)
       
       // For manual poses (non-AI supported), calculate accuracy based on hold time
-      if (!aiSupportedPoses.includes(currentPose) && timeDiff > 0) {
+      if (!AI_SUPPORTED_POSES.includes(currentPose) && timeDiff > 0) {
         // Gradually increase accuracy based on hold time
         // 0-5s: 0-30%, 5-10s: 30-60%, 10-20s: 60-85%, 20s+: 85-95%
         let calculatedAccuracy = 0
@@ -454,9 +449,9 @@ function EnhancedYoga() {
     setIsStartPose(true)
     
     // Check if the current pose has AI support
-    console.log('Starting yoga with pose:', currentPose, 'AI supported:', aiSupportedPoses.includes(currentPose))
+    console.log('Starting yoga with pose:', currentPose, 'AI supported:', AI_SUPPORTED_POSES.includes(currentPose))
     
-    if (aiSupportedPoses.includes(currentPose)) {
+    if (AI_SUPPORTED_POSES.includes(currentPose)) {
       console.log('Using AI detection for', currentPose)
       runMovenet()
     } else {
@@ -639,7 +634,7 @@ function EnhancedYoga() {
     }
   }
 
-  const isAiSupported = aiSupportedPoses.includes(currentPose)
+  const isAiSupported = AI_SUPPORTED_POSES.includes(currentPose)
   
   return (
     <>
@@ -813,8 +808,8 @@ function EnhancedYoga() {
               <p style={{fontSize: '0.8rem', color: '#666', textAlign: 'center', marginBottom: '0.5rem'}}>
                 {availablePoses.length} personalized poses for your practice
               </p>
-              <p style={{fontSize: '0.75rem', color: aiSupportedPoses.includes(currentPose) ? '#667eea' : '#f5576c', textAlign: 'center', marginBottom: '1rem', fontWeight: '600'}}>
-                {aiSupportedPoses.includes(currentPose) ? '🤖 AI Detection Mode' : '⏱️ Manual Practice Mode'}
+              <p style={{fontSize: '0.75rem', color: AI_SUPPORTED_POSES.includes(currentPose) ? '#667eea' : '#f5576c', textAlign: 'center', marginBottom: '1rem', fontWeight: '600'}}>
+                {AI_SUPPORTED_POSES.includes(currentPose) ? '🤖 AI Detection Mode' : '⏱️ Manual Practice Mode'}
               </p>
               <DropDown
                 poseList={availablePoses}

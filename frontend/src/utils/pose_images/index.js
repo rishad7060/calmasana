@@ -9,6 +9,7 @@ import bridge from './bridge.jpg'
 import child from './child.jpg'
 import downwardDog from './Downward Dog.jpg'
 import mountain from './mountain.png'
+import catCow from './cat-cow.jpg'
 
 export const poseImages = {
     Tree: tree,
@@ -18,14 +19,13 @@ export const poseImages = {
     Chair: chair,
     Traingle: traingle,
     Shoulderstand: shoulderstand,
-    // Use existing images for new poses
-    Mountain: mountain, // Proper mountain pose image
-    Child: child, // Proper child pose reference image
-    Bridge: bridge, // Proper bridge pose reference image
-    Plank: warrior, // Strength pose
-    'Cat-Cow': dog, // Floor pose
+    Mountain: mountain, 
+    Child: child,
+    Bridge: bridge,
+    Plank: warrior,
+    'Cat-Cow': catCow,
     'Downward Dog': downwardDog,
-    Triangle: traingle // Alternative spelling
+    Triangle: traingle
 } 
 
 

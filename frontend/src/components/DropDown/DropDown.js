@@ -1,18 +1,12 @@
 import React from 'react'
 
 import { poseImages } from '../../utils/pose_images'
+import { AI_SUPPORTED_POSES } from '../../services/geminiService'
 
 import './DropDown.css'
 
 export default function DropDown({ poseList, currentPose, setCurrentPose }) {
   console.log('DropDown rendering with poseList:', poseList, 'currentPose:', currentPose)
-  
-  // AI Model supported poses (with pose detection)
-  const aiSupportedPoses = [
-    'Tree', 'Chair', 'Cobra', 'Warrior', 'Dog',
-    'Shoulderstand', 'Traingle', 'Mountain', 'Child', 
-    'Bridge', 'Plank', 'Cat-Cow', 'Downward Dog'
-  ]
   
   return (
         <div className='dropdown dropdown-container'>
@@ -30,8 +24,8 @@ export default function DropDown({ poseList, currentPose, setCurrentPose }) {
                     <div className="dropdown-item-container">
                         <div className="pose-info-section">
                           <p className="dropdown-item-1">{pose}</p>
-                          <span className={`pose-mode-badge ${aiSupportedPoses.includes(pose) ? 'ai-mode' : 'manual-mode'}`}>
-                            {aiSupportedPoses.includes(pose) ? '🤖 AI' : '⏱️ Manual'}
+                          <span className={`pose-mode-badge ${AI_SUPPORTED_POSES.includes(pose) ? 'ai-mode' : 'manual-mode'}`}>
+                            {AI_SUPPORTED_POSES.includes(pose) ? '🤖 AI' : '⏱️ Manual'}
                           </span>
                         </div>
                         <img 

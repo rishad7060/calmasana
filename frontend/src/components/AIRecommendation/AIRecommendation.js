@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { generateYogaRecommendations } from '../../services/geminiService'
+import { generateYogaRecommendations, AI_SUPPORTED_POSES } from '../../services/geminiService'
 import './AIRecommendation.css'
 
 export default function AIRecommendation({ yogaProfile, onComplete }) {
@@ -105,7 +105,12 @@ export default function AIRecommendation({ yogaProfile, onComplete }) {
                     <div key={index} className="pose-item">
                       <span className="pose-number">{index + 1}</span>
                       <div className="pose-details">
-                        <span className="pose-name">{pose.name}</span>
+                        <span className="pose-name">
+                          {pose.name}
+                          <span className={`pose-type-badge ${AI_SUPPORTED_POSES.includes(pose.name) ? 'ai-type' : 'manual-type'}`}>
+                            {AI_SUPPORTED_POSES.includes(pose.name) ? '🤖' : '⏱️'}
+                          </span>
+                        </span>
                         <span className="pose-duration">{pose.duration}s</span>
                       </div>
                       <div className="pose-benefit">{pose.benefits}</div>
