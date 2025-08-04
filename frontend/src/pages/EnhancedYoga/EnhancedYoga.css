@@ -345,8 +345,10 @@
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   border: 4px solid var(--card);
-  width: 640px;
-  height: 480px;
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  aspect-ratio: 4/3;
   background: #000;
   display: flex;
   align-items: center;
@@ -358,9 +360,6 @@
   height: 100%;
   object-fit: cover;
   border-radius: 16px;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 .webcam-container canvas {
@@ -370,6 +369,8 @@
   left: 0;
   width: 100%;
   height: 100%;
+  max-width: 640px;
+  max-height: 480px;
 }
 
 /* Error and Loading States */
@@ -488,6 +489,8 @@
   z-index: 10;
   color: white;
   min-width: 160px;
+  max-width: calc(100% - 40px);
+  transition: all 0.3s ease;
 }
 
 .current-pose-title {
@@ -538,8 +541,10 @@
 }
 
 .reference-pose-img {
-  width: 300px;
-  height: 300px;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  aspect-ratio: 1/1;
   object-fit: cover;
   border-radius: 16px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
@@ -559,6 +564,9 @@
   justify-content: center;
   gap: 1rem;
   margin-top: 2rem;
+  position: relative;
+  z-index: 100;
+  pointer-events: auto;
 }
 
 .stop-btn {
@@ -575,11 +583,49 @@
   align-items: center;
   gap: 0.5rem;
   box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+  position: relative;
+  z-index: 101;
+  pointer-events: auto;
+  user-select: none;
 }
 
 .stop-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 30px rgba(239, 68, 68, 0.5);
+}
+
+/* Large Tablets and Small Desktops (1025px - 1399px) */
+@media (min-width: 1025px) and (max-width: 1399px) {
+  .enhanced-yoga-container {
+    padding: 1.25rem;
+  }
+  
+  .main-practice-area {
+    gap: 2.5rem;
+  }
+  
+  .webcam-container {
+    max-width: 600px;
+  }
+  
+  .reference-image-container {
+    max-width: 350px;
+  }
+  
+  .reference-pose-img {
+    max-width: 280px;
+  }
+  
+  .main-content-grid {
+    gap: 1.25rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .pose-selection-card,
+  .instructions-card {
+    padding: 1.25rem;
+  }
 }
 
 /* Responsive Design */
@@ -594,12 +640,192 @@
     gap: 2rem;
   }
   
-  .webcam-container #webcam,
-  .webcam-container #my-canvas {
-    position: static !important;
+  .webcam-container {
+    max-width: 90vw;
+  }
+  
+  .reference-image-container {
+    max-width: 90vw;
+  }
+}
+
+/* Tablet Portrait and Small Landscape (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .enhanced-yoga-container {
+    padding: 1rem;
+  }
+  
+  .main-content-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+  .main-practice-area {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .webcam-container {
     width: 100%;
-    max-width: 640px;
+    max-width: 600px;
     height: auto;
+    aspect-ratio: 4/3;
+  }
+  
+  .reference-image-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 1.5rem;
+  }
+  
+  .reference-pose-img {
+    max-width: 280px;
+  }
+  
+  .pose-selection-card,
+  .instructions-card {
+    padding: 1.5rem;
+  }
+  
+  .section-title {
+    font-size: 1.4rem;
+  }
+  
+  .start-session-btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    max-width: 320px;
+  }
+  
+  .performance-overlay {
+    bottom: 15px;
+    right: 15px;
+    left: auto;
+    width: auto;
+    max-width: 200px;
+    padding: 0.875rem 1rem;
+  }
+  
+  .current-pose-title {
+    font-size: 1.1rem;
+  }
+  
+  .stat-value {
+    font-size: 1.3rem;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+  }
+  
+  .control-panel {
+    margin-top: 1.5rem;
+  }
+  
+  .stop-btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    max-width: 320px;
+  }
+  
+  .pose-sequence {
+    max-height: 180px;
+  }
+  
+  .settings-section {
+    padding: 1.25rem;
+  }
+  
+  .personalized-info {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+  }
+  
+  /* Special handling for tablet landscape */
+  .manual-practice-container {
+    padding: 1.5rem;
+  }
+  
+  .manual-practice-icon {
+    font-size: 3.5rem;
+  }
+  
+  .manual-practice-title {
+    font-size: 1.4rem;
+  }
+  
+  .timer-display {
+    font-size: 2.8rem;
+  }
+  
+  .error-icon {
+    font-size: 3.5rem;
+  }
+  
+  .loading-text,
+  .error-message {
+    font-size: 1.1rem;
+  }
+}
+
+/* Tablet Portrait Orientation Specific */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .main-practice-area {
+    max-width: 90vw;
+    margin: 0 auto;
+  }
+  
+  .webcam-container {
+    max-width: 70vw;
+    min-width: 500px;
+  }
+  
+  .reference-image-container {
+    max-width: 60vw;
+    min-width: 300px;
+  }
+  
+  .main-content-grid {
+    max-width: 85vw;
+    margin: 0 auto;
+  }
+}
+
+/* Tablet Landscape Orientation Specific */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .main-practice-area {
+    flex-direction: row;
+    justify-content: center;
+    max-width: 95vw;
+    margin: 0 auto;
+    gap: 2rem;
+  }
+  
+  .webcam-container {
+    max-width: 45vw;
+    min-width: 400px;
+  }
+  
+  .reference-image-container {
+    max-width: 35vw;
+    min-width: 250px;
+  }
+  
+  .main-content-grid {
+    grid-template-columns: 1fr 1fr;
+    max-width: 95vw;
+    margin: 0 auto;
+    gap: 1rem;
+  }
+  
+  .pose-selection-card,
+  .instructions-card {
+    padding: 1rem;
   }
 }
 
@@ -611,6 +837,13 @@
   .main-content-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+  
+  .main-practice-area {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0 0.5rem;
+    position: relative;
   }
   
   .pose-selection-card,
@@ -657,61 +890,422 @@
     max-width: 250px;
   }
   
-  .reference-pose-img {
+  /* Mobile Reference Image - Floating compact version */
+  .reference-image-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 120px;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    z-index: 999;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .reference-image-container:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Expanded state for mobile reference */
+  .reference-image-container.expanded {
     width: 250px;
-    height: 250px;
+    padding: 1rem;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -50%) scale(1);
+    z-index: 1001;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+  
+  .reference-image-container.expanded:hover {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  
+  .reference-pose-img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .reference-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    margin-top: 0.25rem;
   }
   
   .performance-overlay {
     position: static;
-    margin-bottom: 1rem;
     width: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    padding: 1rem;
+    margin: 0.5rem 0;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 12px;
   }
   
   .pose-stats {
     justify-content: center;
+    gap: 1.5rem;
   }
   
   .webcam-container {
     width: 100%;
-    max-width: 480px;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 4/3;
+  }
+  
+  .control-panel {
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 0 0.5rem;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 100;
+    clear: both;
+  }
+  
+  .stop-btn {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
   }
 }
 
 @media (max-width: 480px) {
   .enhanced-yoga-container {
-    padding: 0.5rem;
+    padding: 0.25rem;
+  }
+  
+  .main-practice-area {
+    gap: 1rem;
   }
   
   .pose-selection-card,
   .instructions-card,
   .settings-card {
-    padding: 1rem;
+    padding: 0.75rem;
+  }
+  
+  .section-title {
+    font-size: 1.2rem;
   }
   
   .start-session-btn {
-    padding: 1rem 1.5rem;
-    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
   }
   
-  .reference-pose-img {
-    width: 200px;
-    height: 200px;
+  /* Smaller floating reference on very small screens */
+  .reference-image-container {
+    width: 100px;
+    padding: 0.375rem;
+    top: 100px;
+    right: 10px;
   }
   
-  .stat-value {
-    font-size: 1.5rem;
+  .reference-label {
+    font-size: 0.65rem;
+  }
+  
+  .webcam-container {
+    border-width: 2px;
+    border-radius: 12px;
+  }
+  
+  .performance-overlay {
+    padding: 0.5rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin: 0.25rem 0;
   }
   
   .current-pose-title {
-    font-size: 1.25rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .stat-value {
+    font-size: 1rem;
+  }
+  
+  .stat-label {
+    font-size: 0.65rem;
   }
   
   .pose-stats {
-    flex-direction: column;
     gap: 1rem;
+  }
+  
+  .control-panel {
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 0 0.5rem;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 100;
+    clear: both;
+  }
+  
+  .stop-btn {
+    width: 100%;
+    max-width: 280px;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .btn-icon {
+    font-size: 1rem;
+  }
+  
+  .manual-practice-container {
+    padding: 1rem;
+  }
+  
+  .manual-practice-icon {
+    font-size: 3rem;
+  }
+  
+  .manual-practice-title {
+    font-size: 1.2rem;
+  }
+  
+  .manual-practice-description {
+    font-size: 0.9rem;
+  }
+  
+  .timer-display {
+    font-size: 2.5rem;
+  }
+  
+  .timer-label {
+    font-size: 0.9rem;
+  }
+  
+  .error-icon {
+    font-size: 3rem;
+  }
+  
+  .error-message,
+  .loading-text {
+    font-size: 0.95rem;
+  }
+}
+
+/* Extra small screens (landscape phones) */
+@media (max-width: 360px) {
+  .enhanced-yoga-container {
+    padding: 0.125rem;
+  }
+  
+  .main-practice-area {
+    gap: 0.75rem;
+  }
+  
+  .pose-selection-card,
+  .instructions-card {
+    padding: 0.5rem;
+  }
+  
+  .section-title {
+    font-size: 1.1rem;
+  }
+  
+  .webcam-container {
+    border-width: 1px;
+    border-radius: 8px;
+  }
+  
+  /* Ultra-compact floating reference */
+  .reference-image-container {
+    width: 80px;
+    padding: 0.25rem;
+    top: 120px;
+    right: 5px;
+    border-radius: 8px;
+  }
+  
+  .reference-label {
+    font-size: 0.6rem;
+  }
+  
+  .performance-overlay {
+    padding: 0.3rem;
+    font-size: 0.75rem;
+    border-radius: 6px;
+    margin: 0.25rem 0;
+  }
+  
+  .current-pose-title {
+    font-size: 0.8rem;
+  }
+  
+  .stat-value {
+    font-size: 0.9rem;
+  }
+  
+  .stat-label {
+    font-size: 0.6rem;
+  }
+  
+  .stop-btn {
+    width: 100%;
+    max-width: 250px;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+  
+  .btn-icon {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile Performance Stats Components */
+.mobile-stats-toggle {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.stats-toggle-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.stats-toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.mobile-performance-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 1rem;
+  margin: 1rem 0;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  animation: slideInUp 0.3s ease-out;
+}
+
+.mobile-stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.overlay-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.overlay-close-btn:hover {
+  background: var(--border-light);
+  color: var(--text-primary);
+}
+
+/* Hide mobile components on desktop */
+@media (min-width: 769px) {
+  .mobile-stats-toggle,
+  .mobile-performance-card {
+    display: none !important;
+  }
+  
+  .overlay-close-btn {
+    display: none !important;
+  }
+}
+
+/* Enhanced mobile performance overlay positioning */
+@media (max-width: 768px) {
+  .webcam-container .performance-overlay {
+    display: none; /* Hide the original overlay on mobile, use mobile-performance-card instead */
+  }
+}
+
+
+/* Restore desktop layout for reference image */
+@media (min-width: 769px) {
+  
+  /* Restore original reference image layout for desktop */
+  .reference-image-container {
+    position: static !important;
+    width: auto !important;
+    padding: 2rem !important;
+    background: var(--card) !important;
+    backdrop-filter: none !important;
+    border-radius: 20px !important;
+    box-shadow: var(--shadow-md) !important;
+    border: 1px solid var(--border) !important;
+    z-index: auto !important;
+    transition: none !important;
+  }
+  
+  .reference-pose-img {
+    width: 100% !important;
+    max-width: 300px !important;
+    height: auto !important;
+    aspect-ratio: 1/1 !important;
+    object-fit: cover !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .reference-label {
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    text-align: center !important;
   }
 }
 

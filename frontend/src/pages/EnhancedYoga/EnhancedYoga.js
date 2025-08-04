@@ -75,6 +75,25 @@ function EnhancedYoga() {
   const [modelLoading, setModelLoading] = useState(false)
   const [availablePoses, setAvailablePoses] = useState(poseList)
   const [sessionEnding, setSessionEnding] = useState(false)
+  const [showPerformanceOverlay, setShowPerformanceOverlay] = useState(true)
+  const [isMobileLayout, setIsMobileLayout] = useState(false)
+  const [performanceAutoTimer, setPerformanceAutoTimer] = useState(null)
+  const [lastAccuracyCheck, setLastAccuracyCheck] = useState(0)
+  const [isReferenceExpanded, setIsReferenceExpanded] = useState(false)
+
+  // Check mobile layout on mount and resize
+  useEffect(() => {
+    const checkMobileLayout = () => {
+      setIsMobileLayout(window.innerWidth <= 768)
+      if (window.innerWidth <= 768) {
+        setShowPerformanceOverlay(false) // Hide by default on mobile
+      }
+    }
+    
+    checkMobileLayout()
+    window.addEventListener('resize', checkMobileLayout)
+    return () => window.removeEventListener('resize', checkMobileLayout)
+  }, [])
 
   // Initialize session and load user data
   useEffect(() => {
@@ -131,7 +150,7 @@ function EnhancedYoga() {
     }
   }, [isStartPose])
 
-  // Track pose time and accuracy
+  // Track pose time and accuracy with smart overlay control
   useEffect(() => {
     const timeDiff = (currentTime - startingTime)/1000
     if(flag) {
@@ -155,6 +174,37 @@ function EnhancedYoga() {
         setPoseAccuracy(Math.round(calculatedAccuracy))
         setIsCorrectPose(calculatedAccuracy >= 60)
         
+        // Smart performance overlay control for mobile
+        if (isMobileLayout) {
+          const accuracyDifference = Math.abs(calculatedAccuracy - lastAccuracyCheck)
+          
+          // Auto-show performance overlay when:
+          // 1. Major accuracy changes (>25 points)
+          // 2. Reaching milestones (60%, 80%, 90%)
+          // 3. First 10 seconds of practice
+          if (timeDiff < 10 || 
+              accuracyDifference > 25 || 
+              (calculatedAccuracy >= 60 && lastAccuracyCheck < 60) ||
+              (calculatedAccuracy >= 80 && lastAccuracyCheck < 80) ||
+              (calculatedAccuracy >= 90 && lastAccuracyCheck < 90)) {
+            
+            setShowPerformanceOverlay(true)
+            
+            // Auto-hide after contextual delay
+            if (performanceAutoTimer) clearTimeout(performanceAutoTimer)
+            const delay = timeDiff < 10 ? 5000 : // 5s for initial display
+                         calculatedAccuracy >= 80 ? 3000 : // 3s for success
+                         4000 // 4s for regular updates
+            
+            const timer = setTimeout(() => {
+              setShowPerformanceOverlay(false)
+            }, delay)
+            setPerformanceAutoTimer(timer)
+          }
+          
+          setLastAccuracyCheck(calculatedAccuracy)
+        }
+        
         // Update feedback based on performance
         if (calculatedAccuracy >= 85) {
           setFeedback('Excellent form! Keep holding this position.')
@@ -170,7 +220,7 @@ function EnhancedYoga() {
     if((currentTime - startingTime)/1000 > bestPerform) {
       setBestPerform(timeDiff)
     }
-  }, [currentTime])
+  }, [currentTime, isMobileLayout, lastAccuracyCheck, performanceAutoTimer])
 
   // Reset states when pose changes
   useEffect(() => {
@@ -307,8 +357,10 @@ function EnhancedYoga() {
       
       // Keep canvas at original video dimensions for proper coordinate mapping
       const canvas = canvasRef.current
-      canvas.width = 640
-      canvas.height = 480
+      const videoWidth = video.videoWidth || 640
+      const videoHeight = video.videoHeight || 480
+      canvas.width = videoWidth
+      canvas.height = videoHeight
       
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
@@ -697,8 +749,6 @@ function EnhancedYoga() {
               ) : (
                 <>
                   <Webcam
-                    width='640'
-                    height='480' 
                     id="webcam"
                     ref={webcamRef}
                     onUserMedia={() => {
@@ -709,12 +759,14 @@ function EnhancedYoga() {
                       setCameraError('Camera access denied. Please allow camera permissions and refresh.')
                     }}
                     videoConstraints={{
-                      width: 640,
-                      height: 480,
+                      aspectRatio: 4/3,
                       facingMode: "user"
                     }}
                     style={{
-                      borderRadius: '16px'
+                      borderRadius: '16px',
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover'
                     }}
                   />
                   <canvas
@@ -731,33 +783,77 @@ function EnhancedYoga() {
               )}
               
               {/* Enhanced Performance Display */}
-              <div className="performance-overlay">
-                <div className="pose-info">
-                  <h3 className="current-pose-title">{currentPose} Pose</h3>
-                  <div className="pose-stats">
-                    <div className="stat-item">
-                      <span className="stat-value">{Math.round(poseTime)}s</span>
-                      <span className="stat-label">Hold Time</span>
-                    </div>
-                    <div className="stat-item">
-                      <span className="stat-value">{Math.round(bestPerform)}s</span>
-                      <span className="stat-label">Best Time</span>
+              {showPerformanceOverlay && (
+                <div className="performance-overlay">
+                  <div className="pose-info">
+                    <h3 className="current-pose-title">{currentPose} Pose</h3>
+                    <div className="pose-stats">
+                      <div className="stat-item">
+                        <span className="stat-value">{Math.round(poseTime)}s</span>
+                        <span className="stat-label">Hold Time</span>
+                      </div>
+                      <div className="stat-item">
+                        <span className="stat-value">{Math.round(bestPerform)}s</span>
+                        <span className="stat-label">Best Time</span>
+                      </div>
                     </div>
                   </div>
+                  {isMobileLayout && (
+                    <button 
+                      className="overlay-close-btn"
+                      onClick={() => setShowPerformanceOverlay(false)}
+                      aria-label="Hide performance stats"
+                    >
+                      ×
+                    </button>
+                  )}
                 </div>
-              </div>
+              )}
             </div>
             
-            <div className="reference-image-container">
+            <div 
+              className={`reference-image-container ${isMobileLayout ? (isReferenceExpanded ? 'expanded' : 'collapsed') : ''}`}
+              onClick={() => isMobileLayout && setIsReferenceExpanded(!isReferenceExpanded)}
+            >
               <img 
                 src={poseImages[currentPose]}
                 className="reference-pose-img"
                 alt={`${currentPose} pose reference`}
               />
-              <div className="reference-label">Reference Pose</div>
+              <div className="reference-label">
+                {isMobileLayout ? (isReferenceExpanded ? '✕' : '👁️') : 'Reference Pose'}
+              </div>
             </div>
           </div>
           
+          {/* Automatic Mobile Performance Stats - No manual controls needed */}
+          
+          {/* Mobile Performance Overlay - Static positioning */}
+          {isMobileLayout && showPerformanceOverlay && (
+            <div className="mobile-performance-card">
+              <div className="pose-info">
+                <div className="mobile-stats-header">
+                  <h3 className="current-pose-title">{currentPose} Pose</h3>
+                  {/* Auto-hide - no manual close needed */}
+                </div>
+                <div className="pose-stats">
+                  <div className="stat-item">
+                    <span className="stat-value">{Math.round(poseTime)}s</span>
+                    <span className="stat-label">Hold Time</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-value">{Math.round(bestPerform)}s</span>
+                    <span className="stat-label">Best Time</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-value">{Math.round(poseAccuracy || 0)}%</span>
+                    <span className="stat-label">Accuracy</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Control Panel */}
           <div className="control-panel">
             <button
@@ -791,6 +887,7 @@ function EnhancedYoga() {
             poseTime={poseTime}
             onToggleVoice={setIsVoiceEnabled}
           />
+
           
         </div>
       </div>

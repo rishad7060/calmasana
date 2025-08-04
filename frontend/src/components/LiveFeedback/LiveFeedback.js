@@ -8,13 +8,30 @@ export default function LiveFeedback({
   feedback, 
   improvements,
   poseTime,
-  targetTime = 30 
+  targetTime = 30
 }) {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [autoShowTimer, setAutoShowTimer] = useState(null)
+  const [lastInteractionTime, setLastInteractionTime] = useState(Date.now())
+  const [sessionPhase, setSessionPhase] = useState('starting') // starting, practicing, struggling, succeeding
   const [scoreHistory, setScoreHistory] = useState([])
   const [averageScore, setAverageScore] = useState(0)
   const [streakCount, setStreakCount] = useState(0)
   const [lastCorrectTime, setLastCorrectTime] = useState(0)
 
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  // Smart auto-show/hide logic based on pose performance and context
   useEffect(() => {
     if (poseAccuracy !== null && poseAccuracy !== undefined) {
       setScoreHistory(prev => {
@@ -31,8 +48,65 @@ export default function LiveFeedback({
       } else if (Date.now() - lastCorrectTime > 3000) { // Reset streak after 3s of incorrect pose
         setStreakCount(0)
       }
+
+      // Smart session phase detection and auto-display logic
+      if (isMobile) {
+        // Auto-show conditions:
+        // 1. When struggling (accuracy < 60% for more than 5 seconds)
+        // 2. When achieving milestones (every 30 seconds of good pose)
+        // 3. At the start of practice (first 15 seconds)
+        // 4. When accuracy dramatically improves or drops
+        
+        const now = Date.now()
+        const timeSinceStart = poseTime
+        
+        let shouldAutoShow = false
+        let newPhase = sessionPhase
+        
+        // Starting phase - first 15 seconds
+        if (timeSinceStart < 15) {
+          shouldAutoShow = true
+          newPhase = 'starting'
+        }
+        // Struggling phase - low accuracy for extended time
+        else if (poseAccuracy < 60 && !isCorrect) {
+          shouldAutoShow = true
+          newPhase = 'struggling'
+        }
+        // Success milestones - every 30 seconds of good performance
+        else if (isCorrect && Math.floor(timeSinceStart) % 30 === 0 && timeSinceStart > 0) {
+          shouldAutoShow = true
+          newPhase = 'succeeding'
+        }
+        // Major accuracy changes (> 30 point swing)
+        else if (scoreHistory.length > 1) {
+          const accuracyChange = Math.abs(poseAccuracy - scoreHistory[scoreHistory.length - 2])
+          if (accuracyChange > 30) {
+            shouldAutoShow = true
+            newPhase = accuracyChange > 0 ? 'improving' : 'declining'
+          }
+        }
+        
+        if (shouldAutoShow && !isExpanded) {
+          setIsExpanded(true)
+          setSessionPhase(newPhase)
+          setLastInteractionTime(now)
+          
+          // Auto-hide after appropriate time based on context
+          const autoHideDelay = newPhase === 'struggling' ? 8000 : // 8s for help
+                                newPhase === 'starting' ? 6000 :   // 6s for initial info
+                                newPhase === 'succeeding' ? 4000 : // 4s for celebration
+                                5000 // 5s default
+          
+          if (autoShowTimer) clearTimeout(autoShowTimer)
+          const timer = setTimeout(() => {
+            setIsExpanded(false)
+          }, autoHideDelay)
+          setAutoShowTimer(timer)
+        }
+      }
     }
-  }, [poseAccuracy, isCorrect])
+  }, [poseAccuracy, isCorrect, poseTime, isMobile, isExpanded, scoreHistory, sessionPhase, autoShowTimer])
 
   const getScoreColor = (score) => {
     if (score >= 85) return '#10b981' // green
@@ -51,8 +125,28 @@ export default function LiveFeedback({
 
   const progressPercentage = Math.min((poseTime / targetTime) * 100, 100)
 
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (autoShowTimer) {
+        clearTimeout(autoShowTimer)
+      }
+    }
+  }, [autoShowTimer])
+
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded)
+    setLastInteractionTime(Date.now())
+    
+    // Clear auto-timer if user manually interacts
+    if (autoShowTimer) {
+      clearTimeout(autoShowTimer)
+      setAutoShowTimer(null)
+    }
+  }
+
   return (
-    <div className="live-feedback">
+    <div className={`live-feedback ${isMobile ? (isExpanded ? 'expanded' : 'collapsed') : ''} ${sessionPhase}`}>
       {/* Real-time Score Display */}
       <div className="score-display">
         <div className="score-circle" style={{ borderColor: getScoreColor(poseAccuracy || 0) }}>
@@ -146,6 +240,7 @@ export default function LiveFeedback({
           ))}
         </div>
       </div>
+
     </div>
   )
 }
